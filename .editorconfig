@@ -1,0 +1,44 @@
+# EditorConfig 帮助开发者在不同的编辑器和 IDE 中定义和维护一致的编码风格。
+# 有关详细信息，请访问 http://editorconfig.org。
+
+# 顶级文件，用于递归查找所有子目录中的文件。
+root = true
+
+# 定义字符编码。
+charset = utf-8
+
+# 缩进样式：空格。
+indent_style = space
+
+# 缩进大小：4 个空格。
+indent_size = 4
+
+# 行尾字符：LF（在 Windows 上可能需要设置为 CRLF）。
+end_of_line = lf
+
+# 在文件末尾插入新行。
+insert_final_newline = true
+
+# 最大行宽：80 个字符。
+max_line_length = 80
+
+# 正则表达式匹配忽略的文件和目录。
+# 例如，忽略所有的 node_modules 目录。
+[*.{js,jsx,ts,tsx,json,md}]
+indent_style = space
+indent_size = 2
+end_of_line = lf
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+max_line_length = 120
+
+# 忽略 node_modules 目录。
+[node_modules]
+indent_style = space
+indent_size = 2
+end_of_line = lf
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+max_line_length = 120
