@@ -1,6 +1,8 @@
 import axios, { AxiosError } from 'axios'
 import { message } from 'antd'
+import { hideLoading, showLoading } from '@/views/fallback/Loading/index'
 
+// 创建axios实例
 const instance = axios.create({
   baseURL: '/api',
   timeout: 8000,
@@ -14,12 +16,16 @@ const instance = axios.create({
 // 请求拦截器
 instance.interceptors.request.use(
   config => {
+    showLoading()
     // 配置请求头
     const token = localStorage.getItem('token')
     if (token) {
       config.headers.Authorization = 'Bearer' + token
     }
-    return { ...config }
+
+    return {
+      ...config
+    }
   },
   (err: AxiosError) => {
     return Promise.reject(err)
@@ -28,29 +34,32 @@ instance.interceptors.request.use(
 
 // 响应拦截器
 instance.interceptors.response.use(
-  res => {
-    const data = res.data
+  response => {
+    // hideLoading()
+    const data = response.data
     if (data.code === 500001) {
       message.error(data.msg)
       localStorage.removeItem('token')
       location.href = '/login'
     } else if (data.code !== 0) {
-      message.error(data.msg || '请求失败')
+      message.error(data.msg)
       return Promise.reject(data)
     }
     return data.data
   },
   (err: AxiosError) => {
-    return Promise.reject(err)
+    // hideLoading()
+    message.error(err.message)
+    return Promise.reject(err.message)
   }
 )
 
 export default {
   get: (url: string, params: any) => {
-    return axios.get(url, { params })
+    return instance.get(url, { params })
   },
 
   post: (url: string, data: any) => {
-    return axios.post(url, data)
+    return instance.post(url, data)
   }
 }
