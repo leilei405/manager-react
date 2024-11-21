@@ -40,7 +40,7 @@ instance.interceptors.response.use(
     if (data.code === 500001) {
       message.error(data.msg)
       localStorage.removeItem('token')
-      location.href = '/login'
+      // location.href = '/login'
     } else if (data.code !== 0) {
       message.error(data.msg)
       return Promise.reject(data)
@@ -55,11 +55,11 @@ instance.interceptors.response.use(
 )
 
 export default {
-  get: (url: string, params: any) => {
+  get<T>(url: string, params?: any): Promise<T> {
     return instance.get(url, { params })
   },
 
-  post: (url: string, data: any) => {
+  post<T>(url: string, data?: any): Promise<T> {
     return instance.post(url, data)
   }
 }
