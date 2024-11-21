@@ -1,7 +1,7 @@
 import { createBrowserRouter, useRoutes } from 'react-router-dom'
 
 import Login from '@/views/Login'
-import Welcome from '@/views/Login'
+import Welcome from '@/views/Welcome'
 import Page403 from '@/views/fallback/Page403'
 import Page404 from '@/views/fallback/Page404'
 import Page500 from '@/views/fallback/Page500'
