@@ -1,4 +1,4 @@
-import { createBrowserRouter } from 'react-router-dom'
+import { createBrowserRouter, useRoutes } from 'react-router-dom'
 
 import Login from '@/views/Login'
 import Welcome from '@/views/Login'
@@ -33,4 +33,10 @@ const routes = [
   }
 ]
 
-export default createBrowserRouter(routes)
+// 1. API 路由
+// export default createBrowserRouter(routes)
+
+// 2. 组件路由
+export default function Router() {
+  return useRoutes(routes)
+}
