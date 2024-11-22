@@ -1,10 +1,11 @@
 import axios, { AxiosError } from 'axios'
 import { message } from 'antd'
 import { hideLoading, showLoading } from '@/views/fallback/Loading/index'
+import { getStorage } from '@/utils/storage'
 
 // 创建axios实例
 const instance = axios.create({
-  baseURL: '/api',
+  baseURL: import.meta.env.VITE_BASE_API,
   timeout: 8000,
   timeoutErrorMessage: '请求超时, 请稍后再试',
   withCredentials: true, // 默认跨域
@@ -18,9 +19,15 @@ instance.interceptors.request.use(
   config => {
     showLoading()
     // 配置请求头
-    const token = localStorage.getItem('token')
+    const token = getStorage('token')
     if (token) {
       config.headers.Authorization = 'Bearer' + token
+    }
+
+    if (import.meta.env.VITE_MOCK === 'true') {
+      config.baseURL = import.meta.env.VITE_MOCK_API
+    } else {
+      config.baseURL = import.meta.env.VITE_BASE_API
     }
 
     return {
