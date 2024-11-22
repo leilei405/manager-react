@@ -3,8 +3,10 @@ import { message } from 'antd'
 import { hideLoading, showLoading } from '@/views/fallback/Loading/index'
 import { getStorage } from '@/utils/storage'
 import env from '@/config'
+import { formatDate2 } from './common-tool-fn'
 
-console.log(env)
+console.log(env, 'env')
+console.log(formatDate2(new Date()), 'Date')
 
 // 创建axios实例
 const instance = axios.create({

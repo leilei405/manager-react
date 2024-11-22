@@ -5,9 +5,7 @@
 // 格式化金额 使用 toLocaleString 方法
 // 缺点：只针对数字类型的金额
 type IMoneyType = number | string
-type ICountryType = 'CN' | 'US' | 'JP' | 'KR' | 'CNY' | 'USD' | 'JPY' | 'KRW'
-
-export const formatMoneyToLocale = (num: number | string) => {
+export const formatMoneyToLocale = (num: IMoneyType) => {
   const numStr = parseFloat(num.toString())
   if (isNaN(numStr)) {
     throw new Error('请输入合法数字金额')
@@ -32,4 +30,44 @@ export const formatMoneyRegExp = (num: IMoneyType) => {
     return numStr.replace(indexOfDropRegExp, '$1,')
   }
   return numStr.replace(strRegExp, '$1,')
+}
+
+// 格式化日期 toLocaleDateString
+export const formatDate = (date?: Date, rule?: string) => {
+  let curDate = new Date()
+  if (date) {
+    curDate = date
+  }
+  if (rule === 'yyyy-mm-dd') {
+    return curDate.toLocaleDateString().replaceAll('/', '-')
+  }
+  if (rule === 'hh:mm:ss') {
+    return curDate.toLocaleTimeString().replaceAll('/', '-')
+  }
+  return curDate.toLocaleString().replaceAll('/', '-')
+}
+
+// 格式化日期 使用正则方式
+export const formatDate2 = (date?: Date, rule?: string) => {
+  let curDate = new Date()
+  if (date) {
+    curDate = date
+  }
+  let fmt = rule || 'yyyy-MM-dd hh:mm:ss'
+  fmt = fmt.replace(/(y+)/, curDate.getFullYear() + '')
+
+  const dateMap: { [key: string]: number } = {
+    'M+': curDate.getMonth() + 1, // 月份
+    'd+': curDate.getDate(), // 日
+    'h+': curDate.getHours(), // 小时
+    'm+': curDate.getMinutes(), // 分
+    's+': curDate.getSeconds() // 秒
+  }
+  for (const key in dateMap) {
+    if (new RegExp(`(${key})`).test(fmt)) {
+      const value = dateMap[key] + ''
+      fmt = fmt.replace(new RegExp(`(${key})`, 'g'), value.length === 1 ? `0${value}` : value)
+    }
+  }
+  return fmt
 }
