@@ -2,6 +2,9 @@ import axios, { AxiosError } from 'axios'
 import { message } from 'antd'
 import { hideLoading, showLoading } from '@/views/fallback/Loading/index'
 import { getStorage } from '@/utils/storage'
+import env from '@/config'
+
+console.log(env)
 
 // 创建axios实例
 const instance = axios.create({
@@ -24,10 +27,13 @@ instance.interceptors.request.use(
       config.headers.Authorization = 'Bearer' + token
     }
 
-    if (import.meta.env.VITE_MOCK === 'true') {
-      config.baseURL = import.meta.env.VITE_MOCK_API
+    // if (import.meta.env.VITE_MOCK === 'true') {
+    if (env.mock) {
+      // config.baseURL = import.meta.env.VITE_MOCK_API
+      config.baseURL = env.mockApi
     } else {
-      config.baseURL = import.meta.env.VITE_BASE_API
+      // config.baseURL = import.meta.env.VITE_BASE_API
+      config.baseURL = env.baseApi
     }
 
     return {
