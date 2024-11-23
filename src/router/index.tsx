@@ -1,7 +1,8 @@
-import { createBrowserRouter, useRoutes } from 'react-router-dom'
+import { createBrowserRouter, Navigate } from 'react-router-dom'
 
 import Login from '@/views/Login'
 import Welcome from '@/views/Welcome'
+import Layout from '@/layout'
 import Page403 from '@/views/fallback/Page403'
 import Page404 from '@/views/fallback/Page404'
 import Page500 from '@/views/fallback/Page500'
@@ -9,11 +10,16 @@ import Page500 from '@/views/fallback/Page500'
 const routes = [
   {
     path: '/',
-    element: <Welcome />
+    element: <Navigate to='/welcome' />
   },
   {
-    path: '/home',
-    element: <Welcome />
+    element: <Layout />,
+    children: [
+      {
+        path: '/welcome',
+        element: <Welcome />
+      }
+    ]
   },
   {
     path: '/login',

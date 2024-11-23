@@ -1,0 +1,22 @@
+.footerWrapper {
+  text-align: center;
+  background-color: #fff;
+  border-radius: 8px;
+  margin-top: 30px;
+  padding: 12px;
+
+  .bottom {
+    padding: 12px 0;
+  }
+
+  .top {
+    // 更改antd 按钮颜色
+    :global(.ant-btn-link) {
+      color: #26dfc9;
+    }
+
+    :global(.ant-btn-link :hover) {
+      color: #a170f2;
+    }
+  }
+}

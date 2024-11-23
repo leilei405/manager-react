@@ -19,11 +19,10 @@ const instance = axios.create({
 instance.interceptors.request.use(
   config => {
     if (config.showLoading) showLoading()
-
-    // 配置请求头
     const token = getStorage('token')
+
     if (token) {
-      config.headers.Authorization = 'Bearer' + token
+      config.headers.Authorization = 'Bearer ' + token
     }
 
     if (env.mock) {
@@ -31,7 +30,6 @@ instance.interceptors.request.use(
     } else {
       config.baseURL = env.baseApi
     }
-
     return {
       ...config
     }
