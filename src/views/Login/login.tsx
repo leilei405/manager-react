@@ -1,4 +1,4 @@
-import { Button, Card, Form, Input, message, Typography } from 'antd'
+import { Button, Card, Form, Input, Typography, message } from 'antd'
 import { login } from '@/api'
 import { setStorage } from '@/utils'
 import { UserParams } from '@/types'
@@ -9,6 +9,8 @@ const Login = () => {
     const result = await login(values)
     setStorage('token', result)
     message.success('登录成功')
+    const params = new URLSearchParams(location.search)
+    window.location.href = params.get('callback') || '/home'
   }
 
   const onFinishFailed = (errorInfo: any) => {
