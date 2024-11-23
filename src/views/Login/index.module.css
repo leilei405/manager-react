@@ -1,0 +1,18 @@
+.login {
+  position: relative;
+  height: 100vh;
+  background: url('http://lowcodedemo.top/login_bg.jpeg') no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+.login .title {
+  text-align: center;
+}
+.login .login-wrapper {
+  position: absolute;
+  right: 5%;
+  top: 50%;
+  width: 600px;
+  padding: 30px;
+  transform: translateY(-50%);
+}

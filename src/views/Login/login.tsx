@@ -1,4 +1,5 @@
 import { Button, Card, Form, Input, Typography } from 'antd'
+import styles from './index.module.less'
 
 const Login = () => {
   const onFinish = (values: any) => {
@@ -10,11 +11,9 @@ const Login = () => {
   }
 
   return (
-    <div className='login'>
-      <Card className='login-wrapper'>
-        <Typography.Title italic style={{ textAlign: 'center' }}>
-          系统登录
-        </Typography.Title>
+    <div className={styles.login}>
+      <Card className={styles['login-wrapper']}>
+        <Typography.Title className={styles.title}>系统登录</Typography.Title>
         <Form
           name='basic'
           style={{ maxWidth: 600 }}
