@@ -3,10 +3,6 @@ import { message } from 'antd'
 import { hideLoading, showLoading } from '@/views/fallback/Loading/index'
 import { getStorage } from '@/utils/storage'
 import env from '@/config'
-import { formatDate2 } from './common-tool-fn'
-
-console.log(env, 'env')
-console.log(formatDate2(new Date()), 'Date')
 
 // 创建axios实例
 const instance = axios.create({
@@ -22,7 +18,7 @@ const instance = axios.create({
 // 请求拦截器
 instance.interceptors.request.use(
   config => {
-    showLoading()
+    // showLoading()
     // 配置请求头
     const token = getStorage('token')
     if (token) {

@@ -34,9 +34,9 @@ const routes = [
 ]
 
 // 1. API 路由
-// export default createBrowserRouter(routes)
+export default createBrowserRouter(routes)
 
 // 2. 组件路由
-export default function Router() {
-  return useRoutes(routes)
-}
+// export default function Router() {
+//   return useRoutes(routes)
+// }

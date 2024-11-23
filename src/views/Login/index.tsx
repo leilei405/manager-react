@@ -1,12 +1,8 @@
-import React, { useEffect } from 'react'
-import request from '@/utils/request'
+import Login from './login'
+import './index.less'
 
-export default function Welcome() {
-  useEffect(() => {
-    request.post('/users/login', {
-      id: '12356'
-    })
-  }, [])
-
-  return <div>Login</div>
+const Wrapper = () => {
+  return <Login />
 }
+
+export default Wrapper
