@@ -18,7 +18,8 @@ const instance = axios.create({
 // 请求拦截器
 instance.interceptors.request.use(
   config => {
-    showLoading()
+    if (config.showLoading) showLoading()
+
     // 配置请求头
     const token = getStorage('token')
     if (token) {
@@ -43,15 +44,19 @@ instance.interceptors.request.use(
 // 响应拦截器
 instance.interceptors.response.use(
   response => {
-    hideLoading()
     const data: IResult = response.data
+    hideLoading()
     if (data.code === 500001) {
       message.error(data.msg)
       removeStorage('token')
-      location.href = '/login'
+      location.href = '/login?callback=' + encodeURIComponent(location.href)
     } else if (data.code !== 0) {
-      message.error(data.msg)
-      return Promise.reject(data)
+      if (response.config.showError === false) {
+        return Promise.resolve(data)
+      } else {
+        message.error(data.msg)
+        return Promise.reject(data)
+      }
     }
     return data.data
   },
@@ -62,10 +67,25 @@ instance.interceptors.response.use(
   }
 )
 
-export const requestGet = <T>(url: string, params?: any): Promise<T> => {
-  return instance.get(url, { params })
+interface IConfig {
+  /** 是否显示loading */
+  showLoading?: boolean
+  /** 是否显示错误提示 */
+  showError?: boolean
 }
 
-export const requestPost = <T>(url: string, data?: any): Promise<T> => {
-  return instance.post(url, data)
+export const requestGet = <T>(
+  url: string,
+  params?: object,
+  options: IConfig = { showLoading: true, showError: true }
+): Promise<T> => {
+  return instance.get(url, { params, ...options })
+}
+
+export const requestPost = <T>(
+  url: string,
+  data?: object,
+  options: IConfig = { showLoading: true, showError: true }
+): Promise<T> => {
+  return instance.post(url, data, options)
 }

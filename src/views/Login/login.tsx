@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Button, Card, Form, Input, Typography, message } from 'antd'
 import { login } from '@/api'
 import { setStorage } from '@/utils'
@@ -5,8 +6,12 @@ import { UserParams } from '@/types'
 import styles from './index.module.less'
 
 const Login = () => {
+  const [loading, setLoading] = useState(false)
+
   const onFinish = async (values: UserParams) => {
+    setLoading(true)
     const result = await login(values)
+    setLoading(false)
     setStorage('token', result)
     message.success('登录成功')
     const params = new URLSearchParams(location.search)
@@ -37,7 +42,7 @@ const Login = () => {
           </Form.Item>
 
           <Form.Item>
-            <Button block type='primary' htmlType='submit'>
+            <Button loading={loading} block type='primary' htmlType='submit'>
               登录
             </Button>
           </Form.Item>
