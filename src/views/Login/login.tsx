@@ -1,9 +1,14 @@
-import { Button, Card, Form, Input, Typography } from 'antd'
+import { Button, Card, Form, Input, message, Typography } from 'antd'
+import { login } from '@/api'
+import { setStorage } from '@/utils'
+import { UserParams } from '@/types'
 import styles from './index.module.less'
 
 const Login = () => {
-  const onFinish = (values: any) => {
-    console.log('Success:', values)
+  const onFinish = async (values: UserParams) => {
+    const result = await login(values)
+    setStorage('token', result)
+    message.success('登录成功')
   }
 
   const onFinishFailed = (errorInfo: any) => {
@@ -17,16 +22,15 @@ const Login = () => {
         <Form
           name='basic'
           style={{ maxWidth: 600 }}
-          initialValues={{ remember: true }}
           onFinish={onFinish}
           onFinishFailed={onFinishFailed}
           autoComplete='off'
         >
-          <Form.Item name='username' rules={[{ required: true, message: '请输入用户名!' }]}>
+          <Form.Item name='userName' rules={[{ required: true, message: '请输入用户名!' }]}>
             <Input placeholder='请输入用户名' />
           </Form.Item>
 
-          <Form.Item name='password' rules={[{ required: true, message: '请输入密码' }]}>
+          <Form.Item name='userPwd' rules={[{ required: true, message: '请输入密码' }]}>
             <Input.Password placeholder='请输入密码' />
           </Form.Item>
 
