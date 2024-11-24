@@ -1,6 +1,7 @@
 .dashboardWrapper {
   background-color: #fff;
   padding: 20px;
+
   .userInfo {
     display: flex;
     justify-content: space-between;
@@ -51,6 +52,32 @@
         // background-color: #6dc3d7;
         background-image: linear-gradient(to top, #a8edea 0%, #fed6e3 100%);
       }
+    }
+  }
+
+  // 图表展示
+  .chart {
+    margin-top: 30px;
+    // 折线图
+    .lineChart {
+      height: 400px;
+    }
+
+    .pieChart {
+      display: flex;
+      .pieChartCity {
+        height: 400px;
+        width: 50%;
+      }
+
+      .pieChartAge {
+        width: 50%;
+      }
+    }
+
+    // 雷达图
+    .radarChart {
+      height: 400px;
     }
   }
 }

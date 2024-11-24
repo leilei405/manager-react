@@ -45,3 +45,22 @@
 .dashboardWrapper .report .card:nth-child(4) {
   background-image: linear-gradient(to top, #a8edea 0%, #fed6e3 100%);
 }
+.dashboardWrapper .chart {
+  margin-top: 30px;
+}
+.dashboardWrapper .chart .lineChart {
+  height: 400px;
+}
+.dashboardWrapper .chart .pieChart {
+  display: flex;
+}
+.dashboardWrapper .chart .pieChart .pieChartCity {
+  height: 400px;
+  width: 50%;
+}
+.dashboardWrapper .chart .pieChart .pieChartAge {
+  width: 50%;
+}
+.dashboardWrapper .chart .radarChart {
+  height: 400px;
+}
