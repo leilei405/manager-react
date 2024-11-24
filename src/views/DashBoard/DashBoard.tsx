@@ -24,14 +24,6 @@ const DashBoard = () => {
   const [pieAgeRef, pieAgeChart] = useChart()
   const [radarRef, radarChart] = useChart()
 
-  // 初始化图表数据
-  useEffect(() => {
-    lineChart?.setOption(lineOptions(lineData))
-    pieCityChart?.setOption(pieCityOption(pieCityData))
-    pieAgeChart?.setOption(pieAgeOption(pieAgeData))
-    radarChart?.setOption(radarChartOption(radarData))
-  }, [lineChart, pieCityChart, pieAgeChart, radarChart])
-
   // 个人信息Descriptions展示
   const items: DescriptionsProps['items'] = [
     {
@@ -116,6 +108,14 @@ const DashBoard = () => {
     getPieAgeChartData()
     getRadarChartData()
   }, [])
+
+  // 初始化图表数据
+  useEffect(() => {
+    lineChart && lineChart?.setOption(lineOptions(lineData))
+    pieCityChart && pieCityChart?.setOption(pieCityOption(pieCityData))
+    pieAgeChart && pieAgeChart?.setOption(pieAgeOption(pieAgeData))
+    radarChart && radarChart?.setOption(radarChartOption(radarData))
+  }, [lineChart, pieCityChart, pieAgeChart, radarChart])
 
   return (
     <div className={styles.dashboardWrapper}>

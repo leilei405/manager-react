@@ -89,7 +89,13 @@ const SiderMenu = () => {
         <img src='http://lowcodedemo.top/logo.png' alt='logo' />
         {!collapsed && <span>后台管理</span>}
       </div>
-      <Menu style={{ width: collapsed ? 80 : 'auto' }} theme='dark' mode='inline' items={items} />
+      <Menu
+        defaultSelectedKeys={['1']}
+        style={{ width: collapsed ? 80 : 'auto' }}
+        theme='dark'
+        mode='inline'
+        items={items}
+      />
     </div>
   )
 }
