@@ -1,5 +1,5 @@
 import { requestGet } from '@/utils'
-import { IReportData } from '@/types'
+import { IReportData, ILineData, IPieData, IRadarData } from '@/types'
 
 // 获取工作台报表数
 export const getReportData = async () => {
@@ -8,20 +8,20 @@ export const getReportData = async () => {
 
 // 获取折线图数据
 export const getLineData = () => {
-  return requestGet('/order/dashboard/getLineData')
+  return requestGet<ILineData>('/order/dashboard/getLineData')
 }
 
 // 获取饼图1数据
 export const getPieCityData = () => {
-  return requestGet('/order/dashboard/getPieCityData')
+  return requestGet<IPieData[]>('/order/dashboard/getPieCityData')
 }
 
 // 获取饼图2数据
 export const getPitAgeData = () => {
-  return requestGet('/order/dashboard/getPieAgeData')
+  return requestGet<IPieData[]>('/order/dashboard/getPieAgeData')
 }
 
 // 获取雷达图数据
 export const getRadarData = () => {
-  return requestGet('/order/dashboard/getRadarData')
+  return requestGet<IRadarData>('/order/dashboard/getRadarData')
 }

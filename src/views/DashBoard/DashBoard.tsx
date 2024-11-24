@@ -2,21 +2,37 @@ import { useEffect, useState } from 'react'
 import { Button, Card, Descriptions, DescriptionsProps } from 'antd'
 import { useChart } from '@/hook'
 import { useStore } from '@/store'
-import { IReportData } from '@/types'
-import { getReportData } from '@/api'
+import { ILineData, IPieData, IRadarData, IReportData } from '@/types'
+import { getReportData, getLineData, getPieCityData, getPitAgeData, getRadarData } from '@/api'
 import { statusFormat, formatMoneyRegExp, formatMoneyToLocale } from '@/utils'
 import { lineOptions, pieCityOption, pieAgeOption, radarChartOption } from './chartOptionData'
 import styles from './index.module.less'
 
 const DashBoard = () => {
   const userInfo = useStore(state => state.userInfo)
+
+  // 工作台统计数据 & 折线图数据 & 饼图数据 & 雷达图数据
   const [report, setReport] = useState<IReportData>({})
+  const [lineData, setLinData] = useState<ILineData>({})
+  const [pieCityData, setPieCityData] = useState<IPieData[]>([])
+  const [pieAgeData, setPieAgeData] = useState<IPieData[]>([])
+  const [radarData, setRadarData] = useState<IRadarData>({})
+
+  // 图表实例
   const [lineRef, lineChart] = useChart()
   const [pieCityRef, pieCityChart] = useChart()
   const [pieAgeRef, pieAgeChart] = useChart()
   const [radarRef, radarChart] = useChart()
 
-  // 个人信息
+  // 初始化图表数据
+  useEffect(() => {
+    lineChart?.setOption(lineOptions(lineData))
+    pieCityChart?.setOption(pieCityOption(pieCityData))
+    pieAgeChart?.setOption(pieAgeOption(pieAgeData))
+    radarChart?.setOption(radarChartOption(radarData))
+  }, [lineChart, pieCityChart, pieAgeChart, radarChart])
+
+  // 个人信息Descriptions展示
   const items: DescriptionsProps['items'] = [
     {
       key: 'userID',
@@ -57,16 +73,40 @@ const DashBoard = () => {
   }
 
   // 获取折线图信息
-  const getLineChartList = async () => {}
+  const getLineChartList = async () => {
+    const lineResult = await getLineData()
+    setLinData(lineResult)
+  }
 
   // 获取饼图城市信息
-  const getPieCityChartData = async () => {}
+  const getPieCityChartData = async () => {
+    const pieCityResult = await getPieCityData()
+    setPieCityData(pieCityResult)
+  }
 
   // 获取饼图年龄信息
-  const getPieAgeChartData = async () => {}
+  const getPieAgeChartData = async () => {
+    const pieAgeResult = await getPitAgeData()
+    setPieAgeData(pieAgeResult)
+  }
 
   // 获取雷达图信息
-  const getRadarChartData = async () => {}
+  const getRadarChartData = async () => {
+    const radarResult = await getRadarData()
+    setRadarData(radarResult)
+  }
+
+  // 刷新图标
+  const handleRefresh = (type: string) => {
+    if (type === 'line') {
+      getLineChartList()
+    } else if (type === 'pie') {
+      getPieCityChartData()
+      getPieAgeChartData()
+    } else if (type === 'radar') {
+      getRadarChartData()
+    }
+  }
 
   // 获取工作台数据
   useEffect(() => {
@@ -76,14 +116,6 @@ const DashBoard = () => {
     getPieAgeChartData()
     getRadarChartData()
   }, [])
-
-  // 初始化图表数据
-  useEffect(() => {
-    lineChart && lineChart.setOption(lineOptions)
-    pieCityChart && pieCityChart.setOption(pieCityOption)
-    pieAgeChart && pieAgeChart.setOption(pieAgeOption)
-    radarChart && radarChart.setOption(radarChartOption)
-  }, [lineChart])
 
   return (
     <div className={styles.dashboardWrapper}>
@@ -115,13 +147,27 @@ const DashBoard = () => {
 
       {/* 折线图展示 */}
       <div className={styles.chart}>
-        <Card title='订单和流水走势图' extra={<Button type='primary'>刷新</Button>}>
+        <Card
+          title='订单和流水走势图'
+          extra={
+            <Button type='primary' onClick={() => handleRefresh('line')}>
+              刷新
+            </Button>
+          }
+        >
           <div ref={lineRef} className={styles.lineChart}></div>
         </Card>
       </div>
       {/* 饼图展示 */}
       <div className={styles.chart}>
-        <Card title='司机分布' extra={<Button type='primary'>刷新</Button>}>
+        <Card
+          title='司机分布'
+          extra={
+            <Button type='primary' onClick={() => handleRefresh('pie')}>
+              刷新
+            </Button>
+          }
+        >
           <div className={styles.pieChart}>
             <div ref={pieCityRef} className={styles.pieChartCity}></div>
             <div ref={pieAgeRef} className={styles.pieChartAge}></div>
@@ -130,7 +176,14 @@ const DashBoard = () => {
       </div>
       {/* 雷达图展示 */}
       <div className={styles.chart}>
-        <Card title='模型诊断' extra={<Button type='primary'>刷新</Button>}>
+        <Card
+          title='模型诊断'
+          extra={
+            <Button type='primary' onClick={() => handleRefresh('radar')}>
+              刷新
+            </Button>
+          }
+        >
           <div ref={radarRef} className={styles.radarChart}></div>
         </Card>
       </div>
