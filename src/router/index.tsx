@@ -4,6 +4,7 @@ import Login from '@/views/Login'
 import Welcome from '@/views/Welcome'
 import Layout from '@/layout'
 import DashBoardPage from '@/views/DashBoard'
+import UserList from '@/views/system/user'
 
 // 403 404 500 页面
 import Page403 from '@/views/fallback/Page403'
@@ -25,6 +26,10 @@ const routes = [
       {
         path: '/dashboard',
         element: <DashBoardPage />
+      },
+      {
+        path: '/userlist',
+        element: <UserList />
       }
     ]
   },

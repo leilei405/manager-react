@@ -3,3 +3,28 @@
   padding: 0;
   box-sizing: border-box;
 }
+
+.searchForm {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  color: #000;
+}
+
+.baseTable {
+  background-color: #fff;
+  border-radius: 5px;
+  color: #000;
+  .headerWrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 5px 5px 0 0;
+    padding: 15px;
+    height: 60px;
+  }
+}
+
+.searchForm + .baseTable {
+  margin-top: 20px;
+}

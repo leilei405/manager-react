@@ -25,7 +25,10 @@ const SiderMenu = () => {
     {
       label: '工作台',
       key: '1',
-      icon: <DesktopOutlined />
+      icon: <DesktopOutlined />,
+      onClick: () => {
+        navigate('/dashboard')
+      }
     },
     {
       label: '用户管理',
@@ -35,7 +38,10 @@ const SiderMenu = () => {
         {
           label: '用户列表',
           key: '2-1',
-          icon: <UserOutlined />
+          icon: <UserOutlined />,
+          onClick: () => {
+            navigate('/userlist')
+          }
         },
         {
           label: '菜单管理',
