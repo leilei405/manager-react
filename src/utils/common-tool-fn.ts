@@ -18,6 +18,7 @@ export const formatMoneyToLocale = (num: IMoneyType) => {
 
 //  格式化数字 使用正则方式
 export const formatMoneyRegExp = (num: IMoneyType) => {
+  if (!num) return 0
   const numStr = num.toString()
 
   // 匹配整数部分的正则

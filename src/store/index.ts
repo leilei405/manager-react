@@ -13,8 +13,19 @@ export const useStore = create<{
   token: '', // 登录凭证
   // 用户信息
   userInfo: {
+    userImg: '',
+    _id: '',
+    userId: 0,
     userName: '',
-    userEmail: ''
+    userEmail: '',
+    mobile: '',
+    deptId: '',
+    deptName: '',
+    job: '',
+    state: 0,
+    role: 0,
+    createId: 0,
+    roleList: ''
   },
   collapsed: false, // 菜单是否折叠
 
@@ -29,7 +40,7 @@ export const useStore = create<{
   },
 
   // 菜单是否折叠
-  updateCollapsed(collapsed: boolean) {
+  updateCollapsed() {
     set(state => {
       return {
         collapsed: !state.collapsed

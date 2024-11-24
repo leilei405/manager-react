@@ -149,3 +149,28 @@ export const radarChartOption = {
     }
   ]
 }
+
+// 暂时先注释掉
+// 饼图-年龄分布配置
+// const getPieAgeChart = () => {
+// const pieChartAge = document.getElementById('pieChartAge')
+// const chartAge = echarts.init(pieChartAge)
+// }
+
+// 雷达图配置
+// const getRadarChart = () => {
+// const radarChart = document.getElementById('radarChart')
+// const chart = echarts.init(radarChart)
+// }
+
+// 饼图-城市分布配置
+// const getPieCityChart = () => {
+// const pieChartCity = document.getElementById('pieChartCity')
+// const chartCity = echarts.init(pieChartCity)
+// }
+
+// 折线图信息配置
+// const getLineChart = () => {
+// const lineChart = document.getElementById('lineChart')
+// const chart = echarts.init(lineChart)
+// }

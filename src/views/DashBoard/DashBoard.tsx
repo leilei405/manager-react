@@ -1,36 +1,47 @@
-import { useEffect } from 'react'
-import * as echarts from 'echarts'
+import { useEffect, useState } from 'react'
 import { Button, Card, Descriptions, DescriptionsProps } from 'antd'
+import { useChart } from '@/hook'
+import { useStore } from '@/store'
+import { IReportData } from '@/types'
+import { getReportData } from '@/api'
+import { statusFormat, formatMoneyRegExp, formatMoneyToLocale } from '@/utils'
 import { lineOptions, pieCityOption, pieAgeOption, radarChartOption } from './chartOptionData'
 import styles from './index.module.less'
 
 const DashBoard = () => {
+  const userInfo = useStore(state => state.userInfo)
+  const [report, setReport] = useState<IReportData>({})
+  const [lineRef, lineChart] = useChart()
+  const [pieCityRef, pieCityChart] = useChart()
+  const [pieAgeRef, pieAgeChart] = useChart()
+  const [radarRef, radarChart] = useChart()
+
   // 个人信息
   const items: DescriptionsProps['items'] = [
     {
       key: 'userID',
       label: '用户ID',
-      children: '00001'
+      children: userInfo?.createId
     },
     {
       key: 'userEmail',
       label: '邮箱',
-      children: 'fllning@163.com'
+      children: userInfo?.userEmail
     },
     {
       key: 'userStatus',
       label: '状态',
-      children: '良好'
+      children: statusFormat(userInfo.state!)
     },
     {
       key: 'telPhoneNumber',
       label: '手机号',
-      children: '18220147709'
+      children: userInfo.mobile || '13888888888'
     },
     {
       key: 'userPost',
       label: '岗位',
-      children: '资深前端开发'
+      children: userInfo.job || '前端技术专家'
     },
     {
       key: 'userDepartment',
@@ -39,40 +50,40 @@ const DashBoard = () => {
     }
   ]
 
-  // 折线图信息
-  const getLineChart = () => {
-    const lineChart = document.getElementById('lineChart')
-    const chart = echarts.init(lineChart)
-    lineOptions && chart.setOption(lineOptions)
+  // 获取工作台统计数据
+  const getReportList = async () => {
+    const result = await getReportData()
+    setReport(result)
   }
 
-  // 饼图-城市分布
-  const getPieCityChart = () => {
-    const pieChartCity = document.getElementById('pieChartCity')
-    const chartCity = echarts.init(pieChartCity)
-    pieCityOption && chartCity.setOption(pieCityOption)
-  }
+  // 获取折线图信息
+  const getLineChartList = async () => {}
 
-  // 饼图-年龄分布
-  const getPieAgeChart = () => {
-    const pieChartAge = document.getElementById('pieChartAge')
-    const chartAge = echarts.init(pieChartAge)
-    pieAgeOption && chartAge.setOption(pieAgeOption)
-  }
+  // 获取饼图城市信息
+  const getPieCityChartData = async () => {}
 
-  // 雷达图
-  const getRadarChart = () => {
-    const radarChart = document.getElementById('radarChart')
-    const chart = echarts.init(radarChart)
-    radarChartOption && chart.setOption(radarChartOption)
-  }
+  // 获取饼图年龄信息
+  const getPieAgeChartData = async () => {}
 
+  // 获取雷达图信息
+  const getRadarChartData = async () => {}
+
+  // 获取工作台数据
   useEffect(() => {
-    getLineChart()
-    getPieCityChart()
-    getPieAgeChart()
-    getRadarChart()
+    getReportList()
+    getLineChartList()
+    getPieCityChartData()
+    getPieAgeChartData()
+    getRadarChartData()
   }, [])
+
+  // 初始化图表数据
+  useEffect(() => {
+    lineChart && lineChart.setOption(lineOptions)
+    pieCityChart && pieCityChart.setOption(pieCityOption)
+    pieAgeChart && pieAgeChart.setOption(pieAgeOption)
+    radarChart && radarChart.setOption(radarChartOption)
+  }, [lineChart])
 
   return (
     <div className={styles.dashboardWrapper}>
@@ -86,41 +97,41 @@ const DashBoard = () => {
       <div className={styles.report}>
         <Card className={styles.card}>
           <div className={styles.title}>司机数量</div>
-          <p>412125</p>
+          <p>{formatMoneyRegExp(report.driverCount! || 0)} 个</p>
         </Card>
         <Card className={styles.card}>
           <div className={styles.title}>总流水</div>
-          <p>412125125</p>
+          <p>{formatMoneyToLocale(report.totalMoney! || 0)} 元</p>
         </Card>
         <Card className={styles.card}>
           <div className={styles.title}>总订单</div>
-          <p>412125125</p>
+          <p>{formatMoneyRegExp(report.orderCount! || 0)} 单</p>
         </Card>
         <Card className={styles.card}>
           <div className={styles.title}>开通城市</div>
-          <p>412125125</p>
+          <p>{report.cityNum!} 座</p>
         </Card>
       </div>
 
       {/* 折线图展示 */}
       <div className={styles.chart}>
         <Card title='订单和流水走势图' extra={<Button type='primary'>刷新</Button>}>
-          <div id='lineChart' className={styles.lineChart}></div>
+          <div ref={lineRef} className={styles.lineChart}></div>
         </Card>
       </div>
       {/* 饼图展示 */}
       <div className={styles.chart}>
         <Card title='司机分布' extra={<Button type='primary'>刷新</Button>}>
           <div className={styles.pieChart}>
-            <div id='pieChartCity' className={styles.pieChartCity}></div>
-            <div id='pieChartAge' className={styles.pieChartAge}></div>
+            <div ref={pieCityRef} className={styles.pieChartCity}></div>
+            <div ref={pieAgeRef} className={styles.pieChartAge}></div>
           </div>
         </Card>
       </div>
       {/* 雷达图展示 */}
       <div className={styles.chart}>
         <Card title='模型诊断' extra={<Button type='primary'>刷新</Button>}>
-          <div id='radarChart' className={styles.radarChart}></div>
+          <div ref={radarRef} className={styles.radarChart}></div>
         </Card>
       </div>
     </div>
