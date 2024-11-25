@@ -1,8 +1,10 @@
-import { useState } from 'react'
+import { useState, useImperativeHandle } from 'react'
 import { Form, GetProp, Input, message, Modal, Select, Upload, UploadProps } from 'antd'
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons'
-import { stateOption, roleOption } from '@/constant'
+import { createUser } from '@/api'
 import { getStorage } from '@/utils'
+import { stateOption, roleOption } from '@/constant'
+import { IAction, IModalProp, UserInfo } from '@/types'
 
 const formItemLayout = {
   labelCol: { span: 4 },
@@ -11,20 +13,50 @@ const formItemLayout = {
 
 type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0]
 
-const CreateUserModal = () => {
+const CreateUserModal = (props: IModalProp) => {
   const [form] = Form.useForm()
+  const [visible, setVisible] = useState(false)
+  const [action, setAction] = useState<IAction>('create')
   const [imageUrl, setImageUrl] = useState()
   const [loading, setLoading] = useState(false)
 
-  // 提交表单
-  const handleSubmit = async () => {
-    const valid = form.validateFields()
-    console.log(valid)
+  // 暴露给父组件的方法
+  useImperativeHandle(props.modalRef, () => {
+    return {
+      open
+    }
+  })
+
+  // 打开模态框
+  const open = (type: IAction, data?: UserInfo) => {
+    setAction(type)
+    setVisible(true)
   }
 
-  // 取消
+  // 提交表单
+  const handleSubmit = async () => {
+    const valid = await form.validateFields()
+    if (valid) {
+      const params = {
+        ...form.getFieldsValue(),
+        userImg: imageUrl
+      }
+      if (action === 'create') {
+        const result = await createUser(params)
+        console.log(result)
+        message.success('创建成功')
+        handleCancel()
+        props.update()
+      } else {
+        // 修改用户
+      }
+    }
+  }
+
+  // 取消重置操作
   const handleCancel = () => {
-    // TODO: 取消
+    setVisible(false)
+    form.resetFields()
   }
 
   // 上传头像
@@ -74,7 +106,7 @@ const CreateUserModal = () => {
       okText='确定'
       cancelText='取消'
       width={800}
-      open={true}
+      open={visible}
       onOk={handleSubmit}
       onCancel={handleCancel}
     >

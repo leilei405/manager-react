@@ -1,3 +1,4 @@
+import { MutableRefObject } from 'react'
 import { PageParams } from './common'
 
 export interface UserInfoC {
@@ -23,9 +24,10 @@ export interface QueryUserParams extends PageParams {
   state?: number
 }
 
-// 全部转为可选类型
+/** 全部转为可选类型 */
 export type UserInfo = Partial<UserInfoC>
 
+/** 用户列表返回类型 */
 export interface IUserListResult {
   list: UserInfo[]
   page: {
@@ -33,4 +35,23 @@ export interface IUserListResult {
     pageSize: number
     total: number
   }
+}
+
+/** 创建用户所传参数 */
+export interface ICreateUserParams {
+  userName: string
+  userEmail: string
+  mobile?: number
+  deptId: string
+  job?: string
+  state: number
+  roleList?: string[]
+  userImg?: string
+}
+
+// 操作类型
+export type IAction = 'create' | 'edit' | 'delete'
+export interface IModalProp {
+  modalRef: MutableRefObject<{ open: (type: IAction, data?: UserInfo) => void } | undefined>
+  update: () => void
 }

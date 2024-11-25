@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Button, Form, Input, Select, Space, Table, TableColumnsType } from 'antd'
-import { IUserListResult, PageParams, UserInfo } from '@/types'
+import { IUserListResult, PageParams, UserInfo, IModalProp, IAction } from '@/types'
 import { getUserListData } from '@/api'
 import { roleOption } from '@/constant'
 import { roleFormat, statusFormat, formatDate } from '@/utils'
@@ -9,6 +9,7 @@ import styles from './index.module.less'
 
 const UserList = () => {
   const [form] = Form.useForm()
+  const modalRef = useRef<{ open: (type: IAction, data?: UserInfo) => void | undefined }>()
   const [dataSource, setDataSource] = useState<IUserListResult['list']>([])
   const [total, setTotal] = useState(0)
   const [pagination, setPagination] = useState({ current: 1, pageSize: 10 })
@@ -65,8 +66,12 @@ const UserList = () => {
       render: () => {
         return (
           <div className={styles.action}>
-            <Button type='text'>编辑</Button>
-            <Button type='text'>删除</Button>
+            <Button type='text' onClick={handleEditUser}>
+              编辑
+            </Button>
+            <Button type='text' onClick={handleDeleteUser}>
+              删除
+            </Button>
           </div>
         )
       }
@@ -76,7 +81,6 @@ const UserList = () => {
   // 获取用户列表
   const getUserList = async (params: PageParams) => {
     const values = form.getFieldsValue()
-    console.log(form.getFieldsValue(), 'form-values')
     const result = await getUserListData({
       ...values,
       pageNum: params.pageNum,
@@ -103,6 +107,22 @@ const UserList = () => {
   // 重置
   const onReset = () => {
     form.resetFields()
+  }
+
+  // 新增用户
+  const handleCreateUser = () => {
+    modalRef.current?.open('create')
+  }
+
+  // 删除用户
+  const handleDeleteUser = () => {
+    console.log('删除用户')
+  }
+
+  // 编辑用户
+  const handleEditUser = () => {
+    console.log('编辑用户')
+    modalRef.current?.open('edit')
   }
 
   // 初始化
@@ -144,7 +164,9 @@ const UserList = () => {
         <div className='headerWrapper'>
           <div className='title'>用户列表</div>
           <Space>
-            <Button type='primary'>新增</Button>
+            <Button type='primary' onClick={handleCreateUser}>
+              新增
+            </Button>
             <Button type='primary' danger>
               批量删除
             </Button>
@@ -172,7 +194,14 @@ const UserList = () => {
           }}
         />
       </div>
-      <CreateUser />
+
+      {/* 新增编辑弹窗 */}
+      <CreateUser
+        modalRef={modalRef}
+        update={() => {
+          getUserList({ pageNum: pagination.current, pageSize: pagination.pageSize })
+        }}
+      />
     </div>
   )
 }

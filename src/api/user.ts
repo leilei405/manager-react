@@ -1,5 +1,5 @@
 import { requestGet, requestPost } from '@/utils'
-import { QueryUserParams, UserInfo, UserParams, IUserListResult } from '@/types'
+import { QueryUserParams, UserInfo, UserParams, IUserListResult, ICreateUserParams } from '@/types'
 
 // 登录
 export const login = (params: UserParams) => {
@@ -14,4 +14,9 @@ export const getUserInfo = () => {
 // 获取用户列表
 export const getUserListData = (params?: QueryUserParams) => {
   return requestGet<IUserListResult>('/users/list', params)
+}
+
+// 创建用户
+export const createUser = (params: ICreateUserParams) => {
+  return requestPost('/users/create', params)
 }
