@@ -1,3 +1,5 @@
+import { PageParams } from './common'
+
 export interface UserInfoC {
   userImg: string
   _id: string
@@ -14,10 +16,11 @@ export interface UserInfoC {
   roleList: string
 }
 
-export interface QueryUserParams {
-  userId: string
-  userName: string
-  state: number
+// 查询用户列表参数
+export interface QueryUserParams extends PageParams {
+  userId?: string
+  userName?: string
+  state?: number
 }
 
 // 全部转为可选类型

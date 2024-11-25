@@ -3,3 +3,8 @@ export interface IResult<T = any> {
   data: T
   msg: string
 }
+
+export interface PageParams {
+  pageNum?: number
+  pageSize?: number
+}
