@@ -34,10 +34,12 @@ export const formatMoneyRegExp = (num: IMoneyType) => {
 }
 
 // 格式化日期 toLocaleDateString
-export const formatDate = (date?: Date, rule?: string) => {
+export const formatDate = (date?: Date | string, rule?: string) => {
   let curDate = new Date()
-  if (date) {
+  if (date instanceof Date) {
     curDate = date
+  } else if (date) {
+    curDate = new Date(date)
   }
   if (rule === 'yyyy-mm-dd') {
     return curDate.toLocaleDateString().replaceAll('/', '-')

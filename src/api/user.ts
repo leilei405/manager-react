@@ -1,5 +1,5 @@
 import { requestGet, requestPost } from '@/utils'
-import { UserInfo, UserParams } from '@/types'
+import { QueryUserParams, UserInfo, UserParams, IUserListResult } from '@/types'
 
 // 登录
 export const login = (params: UserParams) => {
@@ -9,4 +9,9 @@ export const login = (params: UserParams) => {
 // 获取用户信息
 export const getUserInfo = () => {
   return requestGet<UserInfo>('/users/getUserInfo')
+}
+
+// 获取用户列表
+export const getUserListData = (params?: QueryUserParams) => {
+  return requestGet<IUserListResult>('/users/list', params)
 }

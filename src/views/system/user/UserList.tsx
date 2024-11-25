@@ -1,11 +1,14 @@
-import { useState } from 'react'
-import { Button, Form, Input, Select, Space, Table } from 'antd'
+import { useEffect, useState } from 'react'
+import { Button, Form, Input, Select, Space, Table, TableColumnsType } from 'antd'
+import { IUserListResult, UserInfo } from '@/types'
+import { getUserListData } from '@/api'
+import { roleFormat, statusFormat, formatDate } from '@/utils'
 import styles from './index.module.less'
 
 const UserList = () => {
-  const [dataSource, setDataSource] = useState([{}, {}, {}])
+  const [dataSource, setDataSource] = useState<IUserListResult['list']>([])
 
-  const columns = [
+  const columns: TableColumnsType<UserInfo> = [
     {
       title: '用户ID',
       dataIndex: 'userId',
@@ -24,17 +27,26 @@ const UserList = () => {
     {
       title: '用户角色',
       dataIndex: 'role',
-      key: 'role'
+      key: 'role',
+      render: (value: string) => {
+        return roleFormat(value)
+      }
     },
     {
       title: '用户状态',
       dataIndex: 'state',
-      key: 'state'
+      key: 'state',
+      render: (value: number) => {
+        return statusFormat(value)
+      }
     },
     {
       title: '注册时间',
       dataIndex: 'createTime',
-      key: 'createTime'
+      key: 'createTime',
+      render: (value: string) => {
+        return formatDate(value)
+      }
     },
     {
       title: '最后登录时间',
@@ -55,6 +67,19 @@ const UserList = () => {
     }
   ]
 
+  const getUserList = async () => {
+    const result = await getUserListData()
+    setDataSource(result.list)
+  }
+
+  const onReset = () => {
+    console.log('reset')
+  }
+
+  useEffect(() => {
+    getUserList()
+  }, [])
+
   return (
     <div className={styles.userList}>
       <Form className='searchForm' layout='inline'>
@@ -71,6 +96,16 @@ const UserList = () => {
             <Select.Option value='3'>离职</Select.Option>
             <Select.Option value='4'>试用期</Select.Option>
           </Select>
+        </Form.Item>
+        <Form.Item>
+          <Space>
+            <Button type='primary' htmlType='submit'>
+              搜索
+            </Button>
+            <Button htmlType='button' onClick={onReset}>
+              重置
+            </Button>
+          </Space>
         </Form.Item>
       </Form>
 

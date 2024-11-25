@@ -14,5 +14,20 @@ export interface UserInfoC {
   roleList: string
 }
 
+export interface QueryUserParams {
+  userId: string
+  userName: string
+  state: number
+}
+
 // 全部转为可选类型
 export type UserInfo = Partial<UserInfoC>
+
+export interface IUserListResult {
+  list: UserInfo[]
+  page: {
+    pageNum: number
+    pageSize: number
+    total: number
+  }
+}
