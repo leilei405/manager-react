@@ -2,7 +2,9 @@ import { useEffect, useState } from 'react'
 import { Button, Form, Input, Select, Space, Table, TableColumnsType } from 'antd'
 import { IUserListResult, PageParams, UserInfo } from '@/types'
 import { getUserListData } from '@/api'
+import { roleOption } from '@/constant'
 import { roleFormat, statusFormat, formatDate } from '@/utils'
+import CreateUser from './CreateUser'
 import styles from './index.module.less'
 
 const UserList = () => {
@@ -118,11 +120,14 @@ const UserList = () => {
           <Input placeholder='请输入用户名称' />
         </Form.Item>
         <Form.Item label='状态' name='state'>
-          <Select style={{ width: '100%' }} defaultValue={1} placeholder='请选择用户状态'>
-            <Select.Option value={1}>所有</Select.Option>
-            <Select.Option value={2}>在职</Select.Option>
-            <Select.Option value={3}>离职</Select.Option>
-            <Select.Option value={4}>试用期</Select.Option>
+          <Select style={{ width: '100%' }} placeholder='请选择用户状态'>
+            {roleOption.map(item => {
+              return (
+                <Select.Option key={item.value} value={item.value}>
+                  {item.label}
+                </Select.Option>
+              )
+            })}
           </Select>
         </Form.Item>
         <Form.Item>
@@ -167,6 +172,7 @@ const UserList = () => {
           }}
         />
       </div>
+      <CreateUser />
     </div>
   )
 }
