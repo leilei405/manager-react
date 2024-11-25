@@ -1,13 +1,16 @@
 import { useState } from 'react'
-import { Form, Input, Modal, Select, Upload } from 'antd'
+import { Form, GetProp, Input, message, Modal, Select, Upload, UploadProps } from 'antd'
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons'
-
 import { stateOption, roleOption } from '@/constant'
+import { getStorage } from '@/utils'
 
 const formItemLayout = {
   labelCol: { span: 4 },
   wrapperCol: { span: 20 }
 }
+
+type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0]
+
 const CreateUserModal = () => {
   const [form] = Form.useForm()
   const [imageUrl, setImageUrl] = useState()
@@ -31,6 +34,39 @@ const CreateUserModal = () => {
       <div style={{ marginTop: 8 }}>Upload</div>
     </button>
   )
+
+  // 上传前的回调
+  const beforeUpload = (file: FileType) => {
+    const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png'
+    if (!isJpgOrPng) {
+      message.error('只能上传 JPG/PNG 格式图片')
+    }
+    const isLt500K = file.size / 1024 / 1024 < 0.5
+    if (!isLt500K) {
+      message.error('Image must smaller than 2MB!')
+    }
+    return isJpgOrPng && isLt500K
+  }
+
+  // 上传后的回调
+  const handleChange: UploadProps['onChange'] = (info: any) => {
+    if (info.file.status === 'uploading') {
+      setLoading(true)
+      return
+    }
+
+    if (info.file.status === 'done') {
+      setLoading(false)
+      const { code, data, msg } = info.file.response
+      if (+code === 0) {
+        setImageUrl(data.file)
+      } else {
+        message.error(msg)
+      }
+    } else if (info.file.status === 'error') {
+      message.error('服务器异常，请稍后重试！！！')
+    }
+  }
 
   return (
     <Modal
@@ -83,13 +119,18 @@ const CreateUserModal = () => {
             })}
           </Select>
         </Form.Item>
-        <Form.Item label='用户头像' name='userEmail'>
+        <Form.Item label='用户头像'>
           <Upload
-            name='avatar'
             listType='picture-card'
             className='avatar-uploader'
             showUploadList={false}
-            action='https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload'
+            action='/api/users/upload'
+            beforeUpload={beforeUpload}
+            onChange={handleChange}
+            headers={{
+              Authorization: 'Bearer ' + getStorage('token'),
+              icode: '83ED095F04E97C39'
+            }}
           >
             {imageUrl ? <img src={imageUrl} alt='avatar' style={{ width: '100%' }} /> : uploadButton}
           </Upload>
