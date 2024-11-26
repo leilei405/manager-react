@@ -62,14 +62,13 @@ const UserList = () => {
     },
     {
       title: '操作',
-      dataIndex: 'action',
-      render: () => {
+      render: record => {
         return (
           <div className={styles.action}>
-            <Button type='text' onClick={handleEditUser}>
+            <Button type='text' onClick={() => handleEditUser(record)}>
               编辑
             </Button>
-            <Button type='text' onClick={handleDeleteUser}>
+            <Button type='text' onClick={() => handleDeleteUser(record)}>
               删除
             </Button>
           </div>
@@ -115,14 +114,15 @@ const UserList = () => {
   }
 
   // 删除用户
-  const handleDeleteUser = () => {
-    console.log('删除用户')
+  const handleDeleteUser = (record: UserInfo) => {
+    console.log('删除用户', record)
+    modalRef.current?.open('delete', record)
   }
 
   // 编辑用户
-  const handleEditUser = () => {
-    console.log('编辑用户')
-    modalRef.current?.open('edit')
+  const handleEditUser = (record: UserInfo) => {
+    console.log('编辑用户', record)
+    modalRef.current?.open('edit', record)
   }
 
   // 初始化

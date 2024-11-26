@@ -1,7 +1,7 @@
-import { useState, useImperativeHandle } from 'react'
+import { useState, useImperativeHandle, useEffect } from 'react'
 import { Form, GetProp, Input, message, Modal, Select, Upload, UploadProps } from 'antd'
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons'
-import { createUser } from '@/api'
+import { createUser, editUser, deleteUser } from '@/api'
 import { getStorage } from '@/utils'
 import { stateOption, roleOption } from '@/constant'
 import { IAction, IModalProp, UserInfo } from '@/types'
@@ -17,7 +17,7 @@ const CreateUserModal = (props: IModalProp) => {
   const [form] = Form.useForm()
   const [visible, setVisible] = useState(false)
   const [action, setAction] = useState<IAction>('create')
-  const [imageUrl, setImageUrl] = useState()
+  const [imageUrl, setImageUrl] = useState('')
   const [loading, setLoading] = useState(false)
 
   // 暴露给父组件的方法
@@ -31,8 +31,11 @@ const CreateUserModal = (props: IModalProp) => {
   const open = (type: IAction, data?: UserInfo) => {
     setAction(type)
     setVisible(true)
+    if (action === 'edit' && data) {
+      form.setFieldsValue(data)
+      setImageUrl(data.userImg!)
+    }
   }
-
   // 提交表单
   const handleSubmit = async () => {
     const valid = await form.validateFields()
@@ -42,14 +45,14 @@ const CreateUserModal = (props: IModalProp) => {
         userImg: imageUrl
       }
       if (action === 'create') {
-        const result = await createUser(params)
-        console.log(result)
+        await createUser(params)
         message.success('创建成功')
-        handleCancel()
-        props.update()
-      } else {
-        // 修改用户
+      } else if (action === 'edit') {
+        await editUser(params)
+        message.success('编辑成功')
       }
+      handleCancel()
+      props.update()
     }
   }
 
@@ -111,6 +114,9 @@ const CreateUserModal = (props: IModalProp) => {
       onCancel={handleCancel}
     >
       <Form form={form} colon={false} {...formItemLayout}>
+        <Form.Item hidden name='userId'>
+          <Input />
+        </Form.Item>
         <Form.Item label='用户名称' name='userName' rules={[{ required: true, message: '请输入用户名称' }]}>
           <Input placeholder='请输入用户名称' />
         </Form.Item>

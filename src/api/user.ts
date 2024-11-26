@@ -20,3 +20,13 @@ export const getUserListData = (params?: QueryUserParams) => {
 export const createUser = (params: ICreateUserParams) => {
   return requestPost('/users/create', params)
 }
+
+// 编辑用户
+export const editUser = (params: ICreateUserParams) => {
+  return requestPost('/users/edit', params)
+}
+
+// 删除用户
+export const deleteUser = (params: ICreateUserParams) => {
+  return requestPost('/users/delete', params)
+}
