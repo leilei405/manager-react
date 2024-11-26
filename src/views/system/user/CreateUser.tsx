@@ -1,7 +1,7 @@
-import { useState, useImperativeHandle, useEffect } from 'react'
+import { useState, useImperativeHandle } from 'react'
 import { Form, GetProp, Input, message, Modal, Select, Upload, UploadProps } from 'antd'
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons'
-import { createUser, editUser, deleteUser } from '@/api'
+import { createUser, editUser } from '@/api'
 import { getStorage } from '@/utils'
 import { stateOption, roleOption } from '@/constant'
 import { IAction, IModalProp, UserInfo } from '@/types'
@@ -59,6 +59,7 @@ const CreateUserModal = (props: IModalProp) => {
   // 取消重置操作
   const handleCancel = () => {
     setVisible(false)
+    setImageUrl('')
     form.resetFields()
   }
 
@@ -117,16 +118,38 @@ const CreateUserModal = (props: IModalProp) => {
         <Form.Item hidden name='userId'>
           <Input />
         </Form.Item>
-        <Form.Item label='用户名称' name='userName' rules={[{ required: true, message: '请输入用户名称' }]}>
+        <Form.Item
+          label='用户名称'
+          name='userName'
+          rules={[
+            { required: true, message: '请输入用户名称' },
+            { min: 5, max: 12, message: '最小字符5个字符, 最大12个字符' }
+          ]}
+        >
           <Input placeholder='请输入用户名称' />
         </Form.Item>
         <Form.Item label='邮箱' name='userEmail' rules={[{ required: true, message: '请输入邮箱' }]}>
-          <Input placeholder='请输入邮箱' />
+          <Input placeholder='请输入邮箱' disabled={action === 'edit'} />
         </Form.Item>
-        <Form.Item label='手机号' name='mobile '>
-          <Input type='number' maxLength={11} placeholder='请输入手机号' />
+        <Form.Item
+          label='手机号'
+          name='mobile'
+          rules={[
+            { len: 11, message: '手机号必须是11位数字' },
+            { pattern: /1[1-9]\d{9}/, message: '手机号必须为1开头的11位数字' }
+          ]}
+        >
+          <Input type='number' placeholder='请输入手机号' />
         </Form.Item>
-        <Form.Item label='部门' name='deptId' rules={[{ required: true, message: '请选择部门' }]}>
+        <Form.Item
+          label='部门'
+          name='deptId'
+          rules={[
+            { required: true, message: '请选择部门' },
+            { type: 'email', message: '邮箱格式错误' },
+            { pattern: /^\w+@mars.com$/, message: '邮箱必须一@mars.com 结尾' }
+          ]}
+        >
           <Select placeholder='请选择部门'>
             <Select.Option value='0'>普通用户</Select.Option>
             <Select.Option value='1'>管理员</Select.Option>

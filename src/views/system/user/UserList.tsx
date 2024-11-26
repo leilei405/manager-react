@@ -9,7 +9,7 @@ import styles from './index.module.less'
 
 const UserList = () => {
   const [form] = Form.useForm()
-  const modalRef = useRef<{ open: (type: IAction, data?: UserInfo) => void | undefined }>()
+  const modalRef = useRef<{ open: (type: IAction, data?: UserInfo) => void }>()
   const [dataSource, setDataSource] = useState<IUserListResult['list']>([])
   const [total, setTotal] = useState(0)
   const [pagination, setPagination] = useState({ current: 1, pageSize: 10 })
@@ -84,7 +84,7 @@ const UserList = () => {
     const result = await getUserListData({
       ...values,
       pageNum: params.pageNum,
-      pageSize: params.pageSize
+      pageSize: params.pageSize || pagination.pageSize
     })
 
     const { pageNum = 1, pageSize = 10, total = 0 } = result.page
@@ -98,10 +98,7 @@ const UserList = () => {
 
   // 搜索
   const handleSearch = async () => {
-    getUserList({
-      pageNum: 1,
-      pageSize: pagination.pageSize
-    })
+    getUserList({ pageNum: 1 })
   }
 
   // 重置
@@ -125,7 +122,7 @@ const UserList = () => {
         await deleteUser({ userIds: userIds })
         message.success('删除成功')
         setSelectRowKeys([])
-        getUserList({ pageNum: pagination.current, pageSize: pagination.pageSize })
+        getUserList({ pageNum: 1 })
       }
     })
   }
@@ -141,7 +138,7 @@ const UserList = () => {
         await deleteUser({ userIds: selectRowKeys as number[] })
         message.success('删除成功')
         setSelectRowKeys([])
-        getUserList({ pageNum: pagination.current, pageSize: pagination.pageSize })
+        getUserList({ pageNum: 1 })
       }
     })
   }
@@ -155,7 +152,7 @@ const UserList = () => {
   const rowSelection: TableProps<UserInfo>['rowSelection'] = {
     onChange: (selectedRowKeys: React.Key[], selectedRows: UserInfo[]) => {
       setSelectRowKeys(selectedRowKeys)
-      console.log(selectedRows, '====selectedRows===')
+      console.log(selectedRows)
     },
     type: 'checkbox'
   }
@@ -235,7 +232,7 @@ const UserList = () => {
       <CreateUser
         modalRef={modalRef}
         update={() => {
-          getUserList({ pageNum: pagination.current, pageSize: pagination.pageSize })
+          getUserList({ pageNum: 1 })
         }}
       />
     </div>
