@@ -16,6 +16,11 @@ export const getUserListData = (params?: QueryUserParams) => {
   return requestGet<IUserListResult>('/users/list', params)
 }
 
+// 所有用户列表
+export const getAllUserList = async () => {
+  return requestGet<UserInfo[]>('/users/all/list')
+}
+
 // 创建用户
 export const createUser = (params: ICreateUserParams) => {
   return requestPost('/users/create', params)

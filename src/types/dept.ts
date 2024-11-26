@@ -8,6 +8,10 @@ export interface CreateParams {
   userName: string
 }
 
+export interface EditParams extends CreateParams {
+  _id: string
+}
+
 export interface DeptItem extends CreateParams {
   id: string
   userId: number

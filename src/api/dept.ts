@@ -1,7 +1,22 @@
-import { requestGet } from '@/utils'
-import { IDeptQueryParams, DeptItem } from '@/types'
+import { requestGet, requestPost } from '@/utils'
+import { IDeptQueryParams, DeptItem, CreateParams, EditParams } from '@/types'
 
-// 获取工作台报表数
+// 获取部门数据
 export const getDeptData = async (params: IDeptQueryParams) => {
   return requestGet<DeptItem[]>('/dept/list', params)
+}
+
+// 新增部门数据
+export const addDeptData = async (params: CreateParams) => {
+  return requestPost('/dept/create', params)
+}
+
+// 修改部门数据
+export const updateDeptData = async (params: EditParams) => {
+  return requestPost('/dept/edit', params)
+}
+
+// 删除部门数据
+export const deleteDeptData = async (params: { _id: EditParams['_id'] }) => {
+  return requestPost('/dept/delete', params)
 }
