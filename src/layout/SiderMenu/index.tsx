@@ -56,7 +56,10 @@ const SiderMenu = () => {
         {
           label: '部门管理',
           key: '2-4',
-          icon: <SendOutlined />
+          icon: <SendOutlined />,
+          onClick: () => {
+            navigate('/deptlist')
+          }
         }
       ]
     },
