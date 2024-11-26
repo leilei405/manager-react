@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
-import { Button, Form, Input, Select, Space, Table, TableColumnsType } from 'antd'
-import { IUserListResult, PageParams, UserInfo, IModalProp, IAction } from '@/types'
-import { getUserListData } from '@/api'
+import { Button, Form, Input, message, Modal, Select, Space, Table, TableColumnsType, TableProps } from 'antd'
+import { IUserListResult, PageParams, UserInfo, IAction } from '@/types'
+import { deleteUser, getUserListData } from '@/api'
 import { roleOption } from '@/constant'
 import { roleFormat, statusFormat, formatDate } from '@/utils'
 import CreateUser from './CreateUser'
@@ -13,6 +13,7 @@ const UserList = () => {
   const [dataSource, setDataSource] = useState<IUserListResult['list']>([])
   const [total, setTotal] = useState(0)
   const [pagination, setPagination] = useState({ current: 1, pageSize: 10 })
+  const [selectRowKeys, setSelectRowKeys] = useState<React.Key[]>([])
 
   // 表格列
   const columns: TableColumnsType<UserInfo> = [
@@ -62,13 +63,13 @@ const UserList = () => {
     },
     {
       title: '操作',
-      render: record => {
+      render: (_val, record) => {
         return (
           <div className={styles.action}>
             <Button type='text' onClick={() => handleEditUser(record)}>
               编辑
             </Button>
-            <Button type='text' onClick={() => handleDeleteUser(record)}>
+            <Button type='text' onClick={() => handleDeleteUser([record.userId!])}>
               删除
             </Button>
           </div>
@@ -114,15 +115,49 @@ const UserList = () => {
   }
 
   // 删除用户
-  const handleDeleteUser = (record: UserInfo) => {
-    console.log('删除用户', record)
-    modalRef.current?.open('delete', record)
+  const handleDeleteUser = (userIds: number[]) => {
+    Modal.confirm({
+      title: '确认',
+      content: '确认删除该用户吗？',
+      okText: '确认',
+      cancelText: '取消',
+      onOk: async () => {
+        await deleteUser({ userIds: userIds })
+        message.success('删除成功')
+        setSelectRowKeys([])
+        getUserList({ pageNum: pagination.current, pageSize: pagination.pageSize })
+      }
+    })
+  }
+
+  // 批量删除
+  const handleDeleteBatch = () => {
+    Modal.confirm({
+      title: '确认',
+      content: '确认删除该用户吗？',
+      okText: '确认',
+      cancelText: '取消',
+      onOk: async () => {
+        await deleteUser({ userIds: selectRowKeys as number[] })
+        message.success('删除成功')
+        setSelectRowKeys([])
+        getUserList({ pageNum: pagination.current, pageSize: pagination.pageSize })
+      }
+    })
   }
 
   // 编辑用户
   const handleEditUser = (record: UserInfo) => {
-    console.log('编辑用户', record)
     modalRef.current?.open('edit', record)
+  }
+
+  // 表格rowSelection 配置
+  const rowSelection: TableProps<UserInfo>['rowSelection'] = {
+    onChange: (selectedRowKeys: React.Key[], selectedRows: UserInfo[]) => {
+      setSelectRowKeys(selectedRowKeys)
+      console.log(selectedRows, '====selectedRows===')
+    },
+    type: 'checkbox'
   }
 
   // 初始化
@@ -167,7 +202,7 @@ const UserList = () => {
             <Button type='primary' onClick={handleCreateUser}>
               新增
             </Button>
-            <Button type='primary' danger>
+            <Button type='primary' danger onClick={handleDeleteBatch}>
               批量删除
             </Button>
           </Space>
@@ -177,6 +212,7 @@ const UserList = () => {
           bordered
           dataSource={dataSource}
           columns={columns}
+          rowSelection={rowSelection}
           pagination={{
             ...pagination,
             total,

@@ -19,7 +19,7 @@ export interface UserInfoC {
 
 // 查询用户列表参数
 export interface QueryUserParams extends PageParams {
-  userId?: string
+  userId?: number
   userName?: string
   state?: number
 }

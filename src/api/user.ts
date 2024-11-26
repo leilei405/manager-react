@@ -26,7 +26,8 @@ export const editUser = (params: ICreateUserParams) => {
   return requestPost('/users/edit', params)
 }
 
-// 删除用户
-export const deleteUser = (params: ICreateUserParams) => {
-  return requestPost('/users/delete', params)
+// 删除用户 批量删除
+export const deleteUser = (params: { userIds: number[] }) => {
+  console.log('debugger', params)
+  return requestPost('/users/delete', { userIds: params.userIds })
 }
