@@ -1,6 +1,7 @@
-import { useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import { Button, Form, Input, message, Modal, Select, Space, Table, TableColumnsType, TableProps } from 'antd'
-import { IUserListResult, PageParams, UserInfo, IAction } from '@/types'
+import { useAntdTable } from 'ahooks'
+import { UserInfo, IAction, PageParams } from '@/types'
 import { deleteUser, getUserListData } from '@/api'
 import { roleOption } from '@/constant'
 import { roleFormat, statusFormat, formatDate } from '@/utils'
@@ -10,10 +11,24 @@ import styles from './index.module.less'
 const UserList = () => {
   const [form] = Form.useForm()
   const modalRef = useRef<{ open: (type: IAction, data?: UserInfo) => void }>()
-  const [dataSource, setDataSource] = useState<IUserListResult['list']>([])
-  const [total, setTotal] = useState(0)
-  const [pagination, setPagination] = useState({ current: 1, pageSize: 10 })
   const [selectRowKeys, setSelectRowKeys] = useState<React.Key[]>([])
+
+  // 获取用户列表数据
+  const getTableData = ({ current, pageSize }: { current: number; pageSize: number }, formData: PageParams) => {
+    return getUserListData({
+      ...formData,
+      pageNum: current,
+      pageSize
+    }).then(result => {
+      return {
+        total: result.page.total,
+        list: result.list
+      }
+    })
+  }
+
+  // 使用ahooks转换列表数据
+  const { tableProps, search } = useAntdTable(getTableData, { form })
 
   // 表格列
   const columns: TableColumnsType<UserInfo> = [
@@ -78,34 +93,6 @@ const UserList = () => {
     }
   ]
 
-  // 获取用户列表
-  const getUserList = async (params: PageParams) => {
-    const values = form.getFieldsValue()
-    const result = await getUserListData({
-      ...values,
-      pageNum: params.pageNum,
-      pageSize: params.pageSize || pagination.pageSize
-    })
-
-    const { pageNum = 1, pageSize = 10, total = 0 } = result.page
-    setDataSource(result.list)
-    setTotal(total)
-    setPagination({
-      current: pageNum,
-      pageSize: pageSize
-    })
-  }
-
-  // 搜索
-  const handleSearch = async () => {
-    getUserList({ pageNum: 1 })
-  }
-
-  // 重置
-  const onReset = () => {
-    form.resetFields()
-  }
-
   // 新增用户
   const handleCreateUser = () => {
     modalRef.current?.open('create')
@@ -122,7 +109,7 @@ const UserList = () => {
         await deleteUser({ userIds: userIds })
         message.success('删除成功')
         setSelectRowKeys([])
-        getUserList({ pageNum: 1 })
+        search.reset()
       }
     })
   }
@@ -138,7 +125,7 @@ const UserList = () => {
         await deleteUser({ userIds: selectRowKeys as number[] })
         message.success('删除成功')
         setSelectRowKeys([])
-        getUserList({ pageNum: 1 })
+        search.reset()
       }
     })
   }
@@ -156,11 +143,6 @@ const UserList = () => {
     },
     type: 'checkbox'
   }
-
-  // 初始化
-  useEffect(() => {
-    getUserList({ pageNum: pagination.current, pageSize: pagination.pageSize })
-  }, [pagination.current, pagination.pageSize])
 
   return (
     <div className={styles.userList}>
@@ -184,10 +166,10 @@ const UserList = () => {
         </Form.Item>
         <Form.Item>
           <Space>
-            <Button onClick={handleSearch} type='primary' htmlType='submit'>
+            <Button onClick={search.submit} type='primary' htmlType='submit'>
               搜索
             </Button>
-            <Button onClick={onReset}>重置</Button>
+            <Button onClick={search.reset}>重置</Button>
           </Space>
         </Form.Item>
       </Form>
@@ -204,37 +186,11 @@ const UserList = () => {
             </Button>
           </Space>
         </div>
-        <Table
-          rowKey='userId'
-          bordered
-          dataSource={dataSource}
-          columns={columns}
-          rowSelection={rowSelection}
-          pagination={{
-            ...pagination,
-            total,
-            showSizeChanger: true,
-            showTotal: (total: number) => {
-              return `共${total}条`
-            },
-            onChange: (pageNum: number, pageSize: number) => {
-              setPagination({
-                current: pageNum,
-                pageSize
-              })
-              getUserList({ pageNum, pageSize })
-            }
-          }}
-        />
+        <Table rowKey='userId' {...tableProps} bordered columns={columns} rowSelection={rowSelection} />
       </div>
 
       {/* 新增编辑弹窗 */}
-      <CreateUser
-        modalRef={modalRef}
-        update={() => {
-          getUserList({ pageNum: 1 })
-        }}
-      />
+      <CreateUser modalRef={modalRef} update={() => search.reset()} />
     </div>
   )
 }

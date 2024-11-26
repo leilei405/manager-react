@@ -128,7 +128,15 @@ const CreateUserModal = (props: IModalProp) => {
         >
           <Input placeholder='请输入用户名称' />
         </Form.Item>
-        <Form.Item label='邮箱' name='userEmail' rules={[{ required: true, message: '请输入邮箱' }]}>
+        <Form.Item
+          label='邮箱'
+          name='userEmail'
+          rules={[
+            { required: true, message: '请输入邮箱' },
+            { type: 'email', message: '邮箱格式错误' },
+            { pattern: /^\w+@mars.com$/, message: '邮箱必须一@mars.com 结尾' }
+          ]}
+        >
           <Input placeholder='请输入邮箱' disabled={action === 'edit'} />
         </Form.Item>
         <Form.Item
@@ -141,15 +149,7 @@ const CreateUserModal = (props: IModalProp) => {
         >
           <Input type='number' placeholder='请输入手机号' />
         </Form.Item>
-        <Form.Item
-          label='部门'
-          name='deptId'
-          rules={[
-            { required: true, message: '请选择部门' },
-            { type: 'email', message: '邮箱格式错误' },
-            { pattern: /^\w+@mars.com$/, message: '邮箱必须一@mars.com 结尾' }
-          ]}
-        >
+        <Form.Item label='部门' name='deptId' rules={[{ required: true, message: '请选择部门' }]}>
           <Select placeholder='请选择部门'>
             <Select.Option value='0'>普通用户</Select.Option>
             <Select.Option value='1'>管理员</Select.Option>
