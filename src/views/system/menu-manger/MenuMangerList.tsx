@@ -3,6 +3,7 @@ import { Button, Form, Input, message, Modal, Select, Space, Table, TableColumns
 import { formatDate } from '@/utils'
 import { deleteMenu, getMenuList } from '@/api'
 import { EditMenuParams, IAction, MenuItem } from '@/types'
+import CreateMenu from './CreateMenuList'
 
 const MenuMangerList = () => {
   const [form] = Form.useForm()
@@ -23,7 +24,14 @@ const MenuMangerList = () => {
     {
       title: '菜单类型',
       dataIndex: 'menuType',
-      key: 'menuType'
+      key: 'menuType',
+      render: (value: number) => {
+        return {
+          1: '菜单',
+          2: '按钮',
+          3: '页面'
+        }[value]
+      }
     },
     {
       title: '权限标识',
@@ -70,17 +78,17 @@ const MenuMangerList = () => {
 
   // 新增菜单
   const handleCreateMenu = () => {
-    // TODO:
+    menuRef.current?.open('create')
   }
 
   // 新增子菜单
   const handleSubMenu = (_id: string) => {
-    // TODO:
+    menuRef.current?.open('create', { parentId: _id })
   }
 
   // 编辑菜单
   const handleEditMenu = (data: MenuItem) => {
-    // TODO:
+    menuRef.current?.open('edit', data)
   }
 
   // 删除菜单
@@ -139,6 +147,8 @@ const MenuMangerList = () => {
         </div>
         <Table rowKey='_id' bordered dataSource={dataSource} columns={columns} />
       </div>
+
+      <CreateMenu menuRef={menuRef} update={getMenuData} />
     </div>
   )
 }

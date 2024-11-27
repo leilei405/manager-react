@@ -1,7 +1,8 @@
 type OptionType = {
-  value: number
+  value: number | string
   label: string
 }
+
 // 用户状态
 export const stateOption: OptionType[] = [
   {
@@ -39,5 +40,33 @@ export const roleOption: OptionType[] = [
   {
     value: 3,
     label: '普通用户'
+  }
+]
+
+// 菜单类型
+export const menuTypeOption: OptionType[] = [
+  {
+    value: '1',
+    label: '菜单'
+  },
+  {
+    value: '2',
+    label: '按钮'
+  },
+  {
+    value: '3',
+    label: '页面'
+  }
+]
+
+// 菜单状态
+export const menuStateOption: OptionType[] = [
+  {
+    value: '1',
+    label: '启用'
+  },
+  {
+    value: '3',
+    label: '禁用'
   }
 ]
