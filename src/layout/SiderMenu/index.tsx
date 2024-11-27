@@ -1,4 +1,3 @@
-import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Menu } from 'antd'
 import {
@@ -25,10 +24,7 @@ const SiderMenu = () => {
     {
       label: '工作台',
       key: '1',
-      icon: <DesktopOutlined />,
-      onClick: () => {
-        navigate('/dashboard')
-      }
+      icon: <DesktopOutlined />
     },
     {
       label: '用户管理',
@@ -38,10 +34,7 @@ const SiderMenu = () => {
         {
           label: '用户列表',
           key: '2-1',
-          icon: <UserOutlined />,
-          onClick: () => {
-            navigate('/userlist')
-          }
+          icon: <UserOutlined />
         },
         {
           label: '菜单管理',
@@ -56,10 +49,7 @@ const SiderMenu = () => {
         {
           label: '部门管理',
           key: '2-4',
-          icon: <SendOutlined />,
-          onClick: () => {
-            navigate('/deptlist')
-          }
+          icon: <SendOutlined />
         }
       ]
     },

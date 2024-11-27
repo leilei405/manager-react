@@ -1,5 +1,5 @@
 import { requestGet, requestPost } from '@/utils'
-import { QueryUserParams, UserInfo, UserParams, IUserListResult, ICreateUserParams } from '@/types'
+import { QueryUserParams, UserInfo, UserParams, IUserListResult, ICreateUserParams, UserItem } from '@/types'
 
 // 登录
 export const login = (params: UserParams) => {
@@ -18,7 +18,7 @@ export const getUserListData = (params?: QueryUserParams) => {
 
 // 所有用户列表
 export const getAllUserList = async () => {
-  return requestGet<UserInfo[]>('/users/all/list')
+  return requestGet<UserItem[]>('/users/all/list')
 }
 
 // 创建用户

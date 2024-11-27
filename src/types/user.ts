@@ -47,3 +47,10 @@ export interface ICreateUserParams {
   roleList?: string[]
   userImg?: string
 }
+
+export interface UserItem {
+  _id: string
+  userId: number
+  userName: string
+  userEmail: string
+}

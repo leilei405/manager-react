@@ -22,7 +22,7 @@ export interface DeptItem extends CreateParams {
 
 // 等价于下面
 export interface DeptItem {
-  id: string
+  _id: string
   parentId?: string
   createTime: string
   updateTime: string

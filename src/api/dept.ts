@@ -1,13 +1,13 @@
 import { requestGet, requestPost } from '@/utils'
-import { IDeptQueryParams, DeptItem, CreateParams, EditParams } from '@/types'
+import { IDeptQueryParams, CreateParams, EditParams, DeptItem } from '@/types'
 
 // 获取部门数据
-export const getDeptData = async (params: IDeptQueryParams) => {
+export const getDeptData = async (params?: IDeptQueryParams) => {
   return requestGet<DeptItem[]>('/dept/list', params)
 }
 
 // 新增部门数据
-export const addDeptData = async (params: CreateParams) => {
+export const createDeptData = async (params: CreateParams) => {
   return requestPost('/dept/create', params)
 }
 

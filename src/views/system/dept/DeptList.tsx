@@ -1,7 +1,7 @@
 import { formatDate } from '@/utils'
 import { Button, Form, Input, message, Modal, Space, Table, TableColumnsType } from 'antd'
-import { getDeptData } from '@/api'
-import { DeptItem, IAction, EditParams, CreateParams } from '@/types'
+import { deleteDeptData, getDeptData } from '@/api'
+import { DeptItem, IAction, EditParams } from '@/types'
 import { useEffect, useRef, useState } from 'react'
 import CreateDept from './CreateDept'
 
@@ -40,15 +40,17 @@ const DeptList = () => {
     {
       title: '操作',
       render: (_, record) => {
+        console.log(record)
+
         return (
           <Space>
-            <Button type='text' onClick={handleCreate}>
+            <Button type='text' onClick={() => handleCreateDept(record._id)}>
               新增
             </Button>
             <Button type='text' onClick={() => handleEdit(record)}>
               编辑
             </Button>
-            <Button type='text' onClick={handleDelete}>
+            <Button type='text' onClick={() => handleDelete(record._id)}>
               删除
             </Button>
           </Space>
@@ -62,21 +64,26 @@ const DeptList = () => {
     deptRef.current?.open('create')
   }
 
+  const handleCreateDept = async (id: string) => {
+    deptRef.current?.open('create', { parentId: id })
+  }
+
   // 编辑
   const handleEdit = (data: DeptItem) => {
     deptRef.current?.open('edit', data)
   }
 
   // 删除
-  const handleDelete = () => {
+  const handleDelete = (id: string) => {
     Modal.confirm({
       title: '确定',
       content: '确定删除吗？',
       okText: '确定',
       cancelText: '取消',
       onOk: async () => {
-        // TODO: 接口请求
+        await deleteDeptData({ _id: id })
         message.success('删除成功')
+        getDeptListData()
       }
     })
   }
@@ -115,12 +122,14 @@ const DeptList = () => {
       <div className='baseTable'>
         <div className='headerWrapper'>
           <div className='title'>部门列表</div>
-          <Button type='primary'>新增</Button>
+          <Button type='primary' onClick={handleCreate}>
+            新增
+          </Button>
         </div>
         <Table rowKey='_id' bordered dataSource={dataSource} columns={columns} />
       </div>
 
-      <CreateDept deptRef={deptRef} update={getDeptListData} />
+      <CreateDept deptRef={deptRef} update={() => getDeptListData()} />
     </div>
   )
 }
