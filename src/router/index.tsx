@@ -11,6 +11,7 @@ import DeptList from '@/views/system/dept'
 import Page403 from '@/views/fallback/Page403'
 import Page404 from '@/views/fallback/Page404'
 import Page500 from '@/views/fallback/Page500'
+import MenuMangerList from '@/views/system/menu-manger'
 
 const routes = [
   {
@@ -29,12 +30,16 @@ const routes = [
         element: <DashBoardPage />
       },
       {
-        path: '/userlist',
+        path: '/userList',
         element: <UserList />
       },
       {
-        path: '/deptlist',
+        path: '/deptList',
         element: <DeptList />
+      },
+      {
+        path: '/menuList',
+        element: <MenuMangerList />
       }
     ]
   },
