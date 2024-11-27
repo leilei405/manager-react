@@ -1,7 +1,8 @@
-import { useState, useImperativeHandle } from 'react'
+import { useState, useImperativeHandle, useEffect } from 'react'
 import { message, Modal, Input, TreeSelect, Form, Radio } from 'antd'
-import { IModalProp, IAction, EditMenuParams } from '@/types'
-import { createMenu, updateMenu } from '@/api'
+import { InfoCircleOutlined } from '@ant-design/icons'
+import { IModalProp, IAction, EditMenuParams, MenuItem } from '@/types'
+import { createMenu, getMenuList, updateMenu } from '@/api'
 import { menuTypeOption, menuStateOption } from '@/constant'
 
 const formItemLayout = {
@@ -13,6 +14,7 @@ const CreateMenu = (props: IModalProp) => {
   const [action, setAction] = useState<IAction>('create')
   const [form] = Form.useForm()
   const [visible, setVisible] = useState(false)
+  const [menuList, setMenuList] = useState<MenuItem[]>([])
 
   // 提交表单
   const handleSubmit = async () => {
@@ -49,6 +51,16 @@ const CreateMenu = (props: IModalProp) => {
     open
   }))
 
+  // 获取菜单列表
+  const getMenuData = async () => {
+    const result = await getMenuList(form.getFieldsValue())
+    setMenuList(result)
+  }
+
+  useEffect(() => {
+    getMenuData()
+  }, [])
+
   return (
     <Modal
       title={action === 'create' ? '新增菜单' : '编辑菜单'}
@@ -64,28 +76,52 @@ const CreateMenu = (props: IModalProp) => {
           <Input />
         </Form.Item>
         <Form.Item label='父级菜单' name=''>
-          <TreeSelect></TreeSelect>
+          <TreeSelect
+            placeholder='请选择父级菜单'
+            allowClear
+            treeDefaultExpandAll
+            fieldNames={{ label: 'menuName', value: '_id' }}
+            treeData={menuList}
+          ></TreeSelect>
         </Form.Item>
-        <Form.Item label='菜单类型' name='menuType' rules={[{ required: true, message: '请选择菜单类型' }]}>
-          <Radio.Group defaultValue={'1'} options={menuTypeOption}></Radio.Group>
+        <Form.Item
+          initialValue='1'
+          label='菜单类型'
+          name='menuType'
+          rules={[{ required: true, message: '请选择菜单类型' }]}
+        >
+          <Radio.Group options={menuTypeOption}></Radio.Group>
         </Form.Item>
         <Form.Item label='菜单名称' name='menuName' rules={[{ required: true, message: '请输入菜单名称' }]}>
           <Input placeholder='请输入菜单名称' />
         </Form.Item>
-        <Form.Item label='菜单图标' name='icon'>
-          <Input placeholder='请输入菜单图标' />
+        <Form.Item noStyle shouldUpdate>
+          {() => {
+            return form.getFieldValue('menuType') === '2' ? (
+              <Form.Item label='权限标识' name='menuCode'>
+                <Input placeholder='请输入权限标识' />
+              </Form.Item>
+            ) : (
+              <>
+                <Form.Item label='菜单图标' name='icon'>
+                  <Input placeholder='请输入菜单图标' />
+                </Form.Item>
+                <Form.Item label='路由地址' name='path'>
+                  <Input placeholder='请输入路由地址' />
+                </Form.Item>
+              </>
+            )
+          }}
         </Form.Item>
-        <Form.Item label='路由地址' name='path'>
-          <Input placeholder='请输入路由地址' />
-        </Form.Item>
+
         <Form.Item label='组件地址' name='component'>
           <Input placeholder='请输入组件地址' />
         </Form.Item>
-        <Form.Item label='排序' name='orderBy'>
+        <Form.Item label='排序' name='orderBy' tooltip={{ title: '排序值越大越靠后', icon: <InfoCircleOutlined /> }}>
           <Input type='number' min={0} placeholder='请输入组件地址' />
         </Form.Item>
-        <Form.Item label='菜单状态' name='menuState'>
-          <Radio.Group defaultValue={'1'} options={menuStateOption}></Radio.Group>
+        <Form.Item initialValue='1' label='菜单状态' name='menuState'>
+          <Radio.Group options={menuStateOption}></Radio.Group>
         </Form.Item>
       </Form>
     </Modal>

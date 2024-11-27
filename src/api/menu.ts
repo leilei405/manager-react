@@ -13,7 +13,7 @@ export const createMenu = (params: CreateMenuParams) => {
 
 // 更新菜单
 export const updateMenu = (params: EditMenuParams) => {
-  return requestPost('/menu/update', params)
+  return requestPost('/menu/edit', params)
 }
 
 // 删除菜单

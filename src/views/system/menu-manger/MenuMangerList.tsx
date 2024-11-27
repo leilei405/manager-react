@@ -8,7 +8,9 @@ import CreateMenu from './CreateMenuList'
 const MenuMangerList = () => {
   const [form] = Form.useForm()
   const [dataSource, setDataSource] = useState<MenuItem[]>([])
-  const menuRef = useRef<{ open: (type: IAction, data?: EditMenuParams | { parentId?: string }) => void }>()
+  const menuRef = useRef<{
+    open: (type: IAction, data?: EditMenuParams | { parentId?: string; orderBy?: number }) => void
+  }>()
 
   const columns: TableColumnsType<MenuItem> = [
     {
@@ -35,8 +37,8 @@ const MenuMangerList = () => {
     },
     {
       title: '权限标识',
-      dataIndex: 'menuState',
-      key: 'menuState'
+      dataIndex: 'menuCode',
+      key: 'menuCode'
     },
     {
       title: '路由地址',
@@ -45,8 +47,8 @@ const MenuMangerList = () => {
     },
     {
       title: '组件路径',
-      dataIndex: 'userName',
-      key: 'userName'
+      dataIndex: 'component',
+      key: 'component'
     },
     {
       title: '创建时间',
@@ -78,7 +80,9 @@ const MenuMangerList = () => {
 
   // 新增菜单
   const handleCreateMenu = () => {
-    menuRef.current?.open('create')
+    menuRef.current?.open('create', {
+      orderBy: dataSource.length
+    })
   }
 
   // 新增子菜单
@@ -122,7 +126,7 @@ const MenuMangerList = () => {
         <Form.Item label='菜单名称' name='menuName'>
           <Input placeholder='请输入菜单名称' />
         </Form.Item>
-        <Form.Item label='菜单状态' name='menuState'>
+        <Form.Item label='菜单状态' name='menuState' initialValue={'1'}>
           <Select style={{ width: 150 }}>
             <Select.Option value='1'>正常</Select.Option>
             <Select.Option value='2'>禁用</Select.Option>
@@ -130,7 +134,7 @@ const MenuMangerList = () => {
         </Form.Item>
         <Form.Item>
           <Space>
-            <Button type='primary' htmlType='submit'>
+            <Button onClick={getMenuData} type='primary' htmlType='submit'>
               搜索
             </Button>
             <Button>重置</Button>
