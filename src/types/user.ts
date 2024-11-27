@@ -1,4 +1,3 @@
-import { MutableRefObject } from 'react'
 import { PageParams } from './common'
 
 export interface UserInfoC {
@@ -47,11 +46,4 @@ export interface ICreateUserParams {
   state: number
   roleList?: string[]
   userImg?: string
-}
-
-// 操作类型
-export type IAction = 'create' | 'edit' | 'delete'
-export interface IModalProp {
-  modalRef: MutableRefObject<{ open: (type: IAction, data?: UserInfo) => void } | undefined>
-  update: () => void
 }

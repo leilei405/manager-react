@@ -1,13 +1,14 @@
 import { formatDate } from '@/utils'
-import { Button, Form, Input, Space, Table, TableColumnsType } from 'antd'
+import { Button, Form, Input, message, Modal, Space, Table, TableColumnsType } from 'antd'
 import { getDeptData } from '@/api'
-import { DeptItem } from '@/types'
-import { useEffect, useState } from 'react'
+import { DeptItem, IAction, EditParams, CreateParams } from '@/types'
+import { useEffect, useRef, useState } from 'react'
 import CreateDept from './CreateDept'
 
 const DeptList = () => {
   const [form] = Form.useForm()
   const [dataSource, setDataSource] = useState<DeptItem[]>([])
+  const deptRef = useRef<{ open: (type: IAction, data?: EditParams | { parentId?: string }) => void }>()
 
   const columns: TableColumnsType<DeptItem> = [
     {
@@ -38,18 +39,54 @@ const DeptList = () => {
     },
     {
       title: '操作',
-      render: () => {
+      render: (_, record) => {
         return (
           <Space>
-            <Button type='text'>新增</Button>
-            <Button type='text'>编辑</Button>
-            <Button type='text'>删除</Button>
+            <Button type='text' onClick={handleCreate}>
+              新增
+            </Button>
+            <Button type='text' onClick={() => handleEdit(record)}>
+              编辑
+            </Button>
+            <Button type='text' onClick={handleDelete}>
+              删除
+            </Button>
           </Space>
         )
       }
     }
   ]
 
+  // 创建
+  const handleCreate = () => {
+    deptRef.current?.open('create')
+  }
+
+  // 编辑
+  const handleEdit = (data: DeptItem) => {
+    deptRef.current?.open('edit', data)
+  }
+
+  // 删除
+  const handleDelete = () => {
+    Modal.confirm({
+      title: '确定',
+      content: '确定删除吗？',
+      okText: '确定',
+      cancelText: '取消',
+      onOk: async () => {
+        // TODO: 接口请求
+        message.success('删除成功')
+      }
+    })
+  }
+
+  // 重置
+  const handleReset = () => {
+    form.resetFields()
+  }
+
+  // 获取负责人数据
   const getDeptListData = async () => {
     const result = await getDeptData(form.getFieldsValue())
     setDataSource(result)
@@ -58,10 +95,6 @@ const DeptList = () => {
   useEffect(() => {
     getDeptListData()
   }, [])
-
-  const handleReset = () => {
-    form.resetFields()
-  }
 
   return (
     <div>
@@ -84,10 +117,10 @@ const DeptList = () => {
           <div className='title'>部门列表</div>
           <Button type='primary'>新增</Button>
         </div>
-        <Table rowKey='parentId' bordered dataSource={dataSource} columns={columns} />
+        <Table rowKey='_id' bordered dataSource={dataSource} columns={columns} />
       </div>
 
-      <CreateDept />
+      <CreateDept deptRef={deptRef} update={getDeptListData} />
     </div>
   )
 }
