@@ -1,5 +1,7 @@
-import { useNavigate } from 'react-router-dom'
-import { Menu } from 'antd'
+import React from 'react'
+import { useEffect, useState } from 'react'
+import { useNavigate, useRouteLoaderData } from 'react-router-dom'
+import { Menu, MenuProps, MenuTheme } from 'antd'
 import {
   DesktopOutlined,
   UserOutlined,
@@ -12,13 +14,43 @@ import {
   DotChartOutlined,
   PayCircleOutlined
 } from '@ant-design/icons'
+import * as Icons from '@ant-design/icons'
+import { MenuItem as MenuItems } from '@/types'
 import { useStore } from '@/store'
 
 import styles from './index.module.less'
 
+// Menu组件类型
+type MenuItem = Required<MenuProps>['items'][number]
 const SiderMenu = () => {
+  const [menuList, setMenuList] = useState<MenuItems[]>([])
   const navigate = useNavigate()
   const { collapsed } = useStore()
+  const data: any = useRouteLoaderData('layout')
+
+  // 生成每个菜单
+  const getItem = (
+    label: React.ReactNode,
+    key: React.Key | null,
+    icon?: React.ReactNode,
+    children?: MenuItem[]
+  ): MenuItem => {
+    return {
+      label,
+      key,
+      icon,
+      children
+    } as MenuItem
+  }
+
+  function createIcon(icon?: string) {
+    if (!icon) return <></>
+    const customIcon: { [key: string]: any } = Icons
+    if (customIcon[icon]) {
+      return React.createElement(customIcon[icon])
+    }
+    return <></>
+  }
 
   const items = [
     {
@@ -77,10 +109,38 @@ const SiderMenu = () => {
     }
   ]
 
+  // 动态渲染 Icon 图标
+  const customIcons: { [key: string]: any } = Icons
+  const addIcon = (name?: string) => {
+    if (!name) return <div></div>
+    const icon = customIcons[name]
+    if (!icon) return <></>
+    return React.createElement(icon)
+  }
+
+  // 递归获取菜单树
+  const getTreeMenu = (menuData: MenuItems[], treeList: MenuItem[] = []) => {
+    menuData.forEach((item: MenuItems, index) => {
+      if (item.menuType === 1) {
+        if (item.buttons) return treeList.push(getItem(item.menuName, item.path || index, addIcon(item.icon)))
+        else
+          treeList.push(
+            getItem(item.menuName, item.path || index, addIcon(item.icon), getTreeMenu(item.children || []))
+          )
+      }
+    })
+    return treeList
+  }
+
   // 点击跳转到首页
   const handleToHome = () => {
     navigate('/welcome')
   }
+
+  useEffect(() => {
+    const tree = getTreeMenu(data.menuList, [])
+    setMenuList(tree)
+  }, [])
 
   return (
     <div>
@@ -93,7 +153,7 @@ const SiderMenu = () => {
         style={{ width: collapsed ? 80 : 'auto' }}
         theme='dark'
         mode='inline'
-        items={items}
+        items={menuList}
       />
     </div>
   )
