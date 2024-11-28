@@ -97,7 +97,7 @@ const CreateMenu = (props: IModalProp) => {
         </Form.Item>
         <Form.Item noStyle shouldUpdate>
           {() => {
-            return form.getFieldValue('menuType') === '2' ? (
+            return form.getFieldValue('menuType') === 2 ? (
               <Form.Item label='权限标识' name='menuCode'>
                 <Input placeholder='请输入权限标识' />
               </Form.Item>

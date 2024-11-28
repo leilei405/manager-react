@@ -63,13 +63,13 @@ const MenuMangerList = () => {
       render: (_, record) => {
         return (
           <Space>
-            <Button type='text' onClick={() => handleSubMenu(record._id)}>
+            <Button type='text' onClick={() => handleSubMenu(record)}>
               新增
             </Button>
             <Button type='text' onClick={() => handleEditMenu(record)}>
               编辑
             </Button>
-            <Button type='text' onClick={() => handleDeleteMenu(record._id)}>
+            <Button type='text' onClick={() => handleDeleteMenu(record)}>
               删除
             </Button>
           </Space>
@@ -86,8 +86,8 @@ const MenuMangerList = () => {
   }
 
   // 新增子菜单
-  const handleSubMenu = (_id: string) => {
-    menuRef.current?.open('create', { parentId: _id })
+  const handleSubMenu = (data: MenuItem) => {
+    menuRef.current?.open('create', { parentId: data._id, orderBy: data.children?.length })
   }
 
   // 编辑菜单
@@ -96,14 +96,20 @@ const MenuMangerList = () => {
   }
 
   // 删除菜单
-  const handleDeleteMenu = (_id: string) => {
+  const handleDeleteMenu = (data: MenuItem) => {
+    const text = {
+      1: '菜单',
+      2: '按钮',
+      3: '页面'
+    }[data.menuType]
+
     Modal.confirm({
       title: '确定',
-      content: '确定删除吗？',
+      content: `确定删除${text}吗？`,
       okText: '确定',
       cancelText: '取消',
       onOk: async () => {
-        await deleteMenu({ _id })
+        await deleteMenu({ _id: data._id })
         message.success('删除成功')
         getMenuData()
       }
