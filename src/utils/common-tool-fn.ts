@@ -1,3 +1,4 @@
+import { MenuItem } from '@/types'
 /**
  * @description 通用工具函数封装
  */
@@ -73,4 +74,11 @@ export const formatDate2 = (date?: Date, rule?: string) => {
     }
   }
   return fmt
+}
+
+// 获取页面路径
+export const getPagePath = (list: MenuItem[]): string[] => {
+  return list.reduce((result: string[], item: MenuItem) => {
+    return result.concat(Array.isArray(item.children) && !item.buttons ? getPagePath(item.children) : item.path)
+  }, [])
 }

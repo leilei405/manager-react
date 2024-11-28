@@ -16,6 +16,8 @@ const LayoutPage: React.FC = () => {
   const { updateUserInfo, collapsed } = useStore()
   const data = useRouteLoaderData('layout')
 
+  console.log(data)
+
   // 获取用户信息
   const getUserInfoData = async () => {
     const result = await getUserInfo()
