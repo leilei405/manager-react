@@ -6,6 +6,7 @@ import Layout from '@/layout'
 import DashBoardPage from '@/views/DashBoard'
 import UserList from '@/views/system/user'
 import DeptList from '@/views/system/dept'
+import RoleList from '@/views/system/role'
 
 // 403 404 500 页面
 import Page403 from '@/views/fallback/Page403'
@@ -49,6 +50,14 @@ const routes = [
       {
         path: '/menuList',
         element: <MenuMangerList />
+      },
+      {
+        path: '/roleList',
+        element: <RoleList />
+      },
+      {
+        path: '*',
+        element: <Navigate to='/404' />
       }
     ]
   },
