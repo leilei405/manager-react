@@ -13,13 +13,18 @@ import Page404 from '@/views/fallback/Page404'
 import Page500 from '@/views/fallback/Page500'
 import MenuMangerList from '@/views/system/menu-manger'
 
+// 权限拦截
+import loadAuth from './authLoader'
+
 const routes = [
   {
     path: '/',
     element: <Navigate to='/welcome' />
   },
   {
+    id: 'layout',
     element: <Layout />,
+    loader: loadAuth,
     children: [
       {
         path: '/welcome',

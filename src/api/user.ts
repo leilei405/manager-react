@@ -1,5 +1,5 @@
 import { requestGet, requestPost } from '@/utils'
-import { QueryUserParams, UserInfo, UserParams, IUserListResult, ICreateUserParams, UserItem } from '@/types'
+import { QueryUserParams, UserInfo, UserParams, IUserListResult, ICreateUserParams, UserItem, MenuItem } from '@/types'
 
 // 登录
 export const login = (params: UserParams) => {
@@ -35,4 +35,9 @@ export const editUser = (params: ICreateUserParams) => {
 export const deleteUser = (params: { userIds: number[] }) => {
   console.log('debugger', params)
   return requestPost('/users/delete', { userIds: params.userIds })
+}
+
+// 权限列表
+export const getPermissionList = () => {
+  return requestGet<{ buttonList: string[]; menuList: MenuItem[] }>('/users/getPermissionList')
 }

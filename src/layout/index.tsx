@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Outlet } from 'react-router-dom'
+import { Outlet, useRouteLoaderData } from 'react-router-dom'
 import { Layout, Watermark } from 'antd'
 import { getUserInfo } from '@/api'
 import { useStore } from '@/store'
@@ -14,6 +14,7 @@ const { Sider, Content } = Layout
 
 const LayoutPage: React.FC = () => {
   const { updateUserInfo, collapsed } = useStore()
+  const data = useRouteLoaderData('layout')
 
   // 获取用户信息
   const getUserInfoData = async () => {
