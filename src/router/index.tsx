@@ -18,6 +18,10 @@ import loadAuth from './authLoader'
 
 const routes = [
   {
+    path: '/login',
+    element: <Login />
+  },
+  {
     path: '/',
     element: <Navigate to='/welcome' />
   },
@@ -47,10 +51,6 @@ const routes = [
         element: <MenuMangerList />
       }
     ]
-  },
-  {
-    path: '/login',
-    element: <Login />
   },
   {
     path: '/403',

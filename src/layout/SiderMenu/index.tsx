@@ -1,7 +1,7 @@
 import React from 'react'
 import { useEffect, useState } from 'react'
-import { useNavigate, useRouteLoaderData } from 'react-router-dom'
-import { Menu, MenuProps, MenuTheme } from 'antd'
+import { useLocation, useNavigate, useRouteLoaderData } from 'react-router-dom'
+import { Menu, MenuProps } from 'antd'
 import {
   DesktopOutlined,
   UserOutlined,
@@ -23,8 +23,10 @@ import styles from './index.module.less'
 // Menu组件类型
 type MenuItem = Required<MenuProps>['items'][number]
 const SiderMenu = () => {
-  const [menuList, setMenuList] = useState<MenuItems[]>([])
+  const [menuList, setMenuList] = useState<MenuItem[]>([])
+  const [selectedKeys, setSelectedKeys] = useState<string[]>([])
   const navigate = useNavigate()
+  const { pathname } = useLocation()
   const { collapsed } = useStore()
   const data: any = useRouteLoaderData('layout')
 
@@ -43,6 +45,7 @@ const SiderMenu = () => {
     } as MenuItem
   }
 
+  // 动态渲染 Icon 图标
   function createIcon(icon?: string) {
     if (!icon) return <></>
     const customIcon: { [key: string]: any } = Icons
@@ -52,6 +55,7 @@ const SiderMenu = () => {
     return <></>
   }
 
+  // @ts-ignore
   const items = [
     {
       label: '工作台',
@@ -109,27 +113,23 @@ const SiderMenu = () => {
     }
   ]
 
-  // 动态渲染 Icon 图标
-  const customIcons: { [key: string]: any } = Icons
-  const addIcon = (name?: string) => {
-    if (!name) return <div></div>
-    const icon = customIcons[name]
-    if (!icon) return <></>
-    return React.createElement(icon)
-  }
-
   // 递归获取菜单树
   const getTreeMenu = (menuData: MenuItems[], treeList: MenuItem[] = []) => {
     menuData.forEach((item: MenuItems, index) => {
       if (item.menuType === 1) {
-        if (item.buttons) return treeList.push(getItem(item.menuName, item.path || index, addIcon(item.icon)))
+        if (item.buttons) return treeList.push(getItem(item.menuName, item.path || index, createIcon(item.icon)))
         else
           treeList.push(
-            getItem(item.menuName, item.path || index, addIcon(item.icon), getTreeMenu(item.children || []))
+            getItem(item.menuName, item.path || index, createIcon(item.icon), getTreeMenu(item.children || []))
           )
       }
     })
     return treeList
+  }
+
+  const handleClickMenu = ({ key }: { key: string }) => {
+    setSelectedKeys([key])
+    navigate(key)
   }
 
   // 点击跳转到首页
@@ -138,8 +138,9 @@ const SiderMenu = () => {
   }
 
   useEffect(() => {
-    const tree = getTreeMenu(data.menuList, [])
+    const tree: any = getTreeMenu(data.menuList, [])
     setMenuList(tree)
+    setSelectedKeys([pathname])
   }, [])
 
   return (
@@ -149,10 +150,12 @@ const SiderMenu = () => {
         {!collapsed && <span>后台管理</span>}
       </div>
       <Menu
+        onClick={handleClickMenu}
         defaultSelectedKeys={['1']}
         style={{ width: collapsed ? 80 : 'auto' }}
         theme='dark'
         mode='inline'
+        selectedKeys={selectedKeys}
         items={menuList}
       />
     </div>
