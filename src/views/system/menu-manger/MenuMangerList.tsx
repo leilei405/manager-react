@@ -126,10 +126,10 @@ const MenuMangerList = () => {
         <Form.Item label='菜单名称' name='menuName'>
           <Input placeholder='请输入菜单名称' />
         </Form.Item>
-        <Form.Item label='菜单状态' name='menuState' initialValue={'1'}>
+        <Form.Item label='菜单状态' name='menuState' initialValue={1}>
           <Select style={{ width: 150 }}>
-            <Select.Option value='1'>正常</Select.Option>
-            <Select.Option value='2'>禁用</Select.Option>
+            <Select.Option value={1}>正常</Select.Option>
+            <Select.Option value={2}>禁用</Select.Option>
           </Select>
         </Form.Item>
         <Form.Item>

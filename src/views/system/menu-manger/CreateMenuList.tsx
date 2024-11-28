@@ -85,7 +85,7 @@ const CreateMenu = (props: IModalProp) => {
           ></TreeSelect>
         </Form.Item>
         <Form.Item
-          initialValue='1'
+          initialValue={1}
           label='菜单类型'
           name='menuType'
           rules={[{ required: true, message: '请选择菜单类型' }]}
@@ -120,7 +120,7 @@ const CreateMenu = (props: IModalProp) => {
         <Form.Item label='排序' name='orderBy' tooltip={{ title: '排序值越大越靠后', icon: <InfoCircleOutlined /> }}>
           <Input type='number' min={0} placeholder='请输入组件地址' />
         </Form.Item>
-        <Form.Item initialValue='1' label='菜单状态' name='menuState'>
+        <Form.Item initialValue={1} label='菜单状态' name='menuState'>
           <Radio.Group options={menuStateOption}></Radio.Group>
         </Form.Item>
       </Form>

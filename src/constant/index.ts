@@ -46,15 +46,15 @@ export const roleOption: OptionType[] = [
 // 菜单类型
 export const menuTypeOption: OptionType[] = [
   {
-    value: '1',
+    value: 1,
     label: '菜单'
   },
   {
-    value: '2',
+    value: 2,
     label: '按钮'
   },
   {
-    value: '3',
+    value: 3,
     label: '页面'
   }
 ]
@@ -62,11 +62,11 @@ export const menuTypeOption: OptionType[] = [
 // 菜单状态
 export const menuStateOption: OptionType[] = [
   {
-    value: '1',
+    value: 1,
     label: '启用'
   },
   {
-    value: '3',
+    value: 2,
     label: '禁用'
   }
 ]
