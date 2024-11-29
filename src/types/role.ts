@@ -17,6 +17,14 @@ export interface RoleItem {
   createTime?: string
 }
 
+export interface CreateParams {
+  roleName: string
+  remark?: string
+}
+
+export interface EditRoleParams extends CreateParams {
+  _id: string
+}
 export interface IRoleListResult {
   list: RoleItem[]
   page: {

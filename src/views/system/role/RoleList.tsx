@@ -1,11 +1,14 @@
+import { useRef } from 'react'
 import { Input, Space, Button, Table, Form, TableColumnsType } from 'antd'
 import { useAntdTable } from 'ahooks'
 import { formatDate } from '@/utils'
 import { getRoleListData } from '@/api'
-import { PageParams, RoleItem } from '@/types'
+import { IAction, PageParams, RoleItem } from '@/types'
+import CreateRoleModal from './CreateRole'
 
 const RoleList = () => {
   const [form] = Form.useForm()
+  const roleRef = useRef<{ open: (type: IAction, data?: RoleItem) => void }>()
 
   const getRoleList = ({ current, pageSize }: { current: number; pageSize: number }, formData: PageParams) => {
     return getRoleListData({
@@ -13,7 +16,6 @@ const RoleList = () => {
       pageNum: current,
       pageSize
     }).then(result => {
-      console.log(result)
       return {
         total: result.page.total,
         list: result.list
@@ -59,7 +61,9 @@ const RoleList = () => {
       render: (_val, record) => {
         return (
           <Space>
-            <Button type='text'>编辑</Button>
+            <Button type='text' onClick={() => handleEditRole(record)}>
+              编辑
+            </Button>
             <Button type='text'>设置权限</Button>
             <Button type='text'>删除</Button>
           </Space>
@@ -67,6 +71,16 @@ const RoleList = () => {
       }
     }
   ]
+
+  // 新增角色
+  const handleCreateRole = () => {
+    roleRef.current?.open('create')
+  }
+
+  // 编辑角色
+  const handleEditRole = (record: RoleItem) => {
+    roleRef.current?.open('edit', record)
+  }
 
   return (
     <div>
@@ -87,9 +101,16 @@ const RoleList = () => {
       <div className='baseTable'>
         <div className='headerWrapper'>
           <div className='title'>角色列表</div>
+          <Space>
+            <Button type='primary' onClick={handleCreateRole}>
+              新增
+            </Button>
+          </Space>
         </div>
+
         <Table rowKey='_id' {...tableProps} bordered columns={columns} />
       </div>
+      <CreateRoleModal roleRef={roleRef} update={search.reset} />
     </div>
   )
 }
