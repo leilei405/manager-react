@@ -25,6 +25,11 @@ export interface CreateParams {
 export interface EditRoleParams extends CreateParams {
   _id: string
 }
+
+export interface DelRoleParams {
+  _id: string
+}
+
 export interface IRoleListResult {
   list: RoleItem[]
   page: {

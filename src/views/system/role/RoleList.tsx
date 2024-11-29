@@ -1,8 +1,8 @@
 import { useRef } from 'react'
-import { Input, Space, Button, Table, Form, TableColumnsType } from 'antd'
+import { Input, Space, Button, Table, Form, TableColumnsType, Modal } from 'antd'
 import { useAntdTable } from 'ahooks'
 import { formatDate } from '@/utils'
-import { getRoleListData } from '@/api'
+import { deleteRole, getRoleListData } from '@/api'
 import { IAction, PageParams, RoleItem } from '@/types'
 import CreateRoleModal from './CreateRole'
 
@@ -65,7 +65,9 @@ const RoleList = () => {
               编辑
             </Button>
             <Button type='text'>设置权限</Button>
-            <Button type='text'>删除</Button>
+            <Button type='text' onClick={() => handleDeleteRole(record)}>
+              删除
+            </Button>
           </Space>
         )
       }
@@ -80,6 +82,20 @@ const RoleList = () => {
   // 编辑角色
   const handleEditRole = (record: RoleItem) => {
     roleRef.current?.open('edit', record)
+  }
+
+  // 删除角色
+  const handleDeleteRole = (record: RoleItem) => {
+    Modal.confirm({
+      title: '确定',
+      content: '确定要删除该角色吗?',
+      onOk: async () => {
+        await deleteRole({ _id: record._id || '' })
+        search.reset()
+      },
+      cancelText: '取消',
+      okText: '确定'
+    })
   }
 
   return (
