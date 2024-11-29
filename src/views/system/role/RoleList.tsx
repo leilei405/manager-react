@@ -5,10 +5,12 @@ import { formatDate } from '@/utils'
 import { deleteRole, getRoleListData } from '@/api'
 import { IAction, PageParams, RoleItem } from '@/types'
 import CreateRoleModal from './CreateRole'
+import SetPermission from './SetPermission'
 
 const RoleList = () => {
   const [form] = Form.useForm()
   const roleRef = useRef<{ open: (type: IAction, data?: RoleItem) => void }>()
+  const permissionRef = useRef<{ open: (type: IAction, data?: RoleItem) => void }>()
 
   const getRoleList = ({ current, pageSize }: { current: number; pageSize: number }, formData: PageParams) => {
     return getRoleListData({
@@ -64,7 +66,9 @@ const RoleList = () => {
             <Button type='text' onClick={() => handleEditRole(record)}>
               编辑
             </Button>
-            <Button type='text'>设置权限</Button>
+            <Button type='text' onClick={() => handlePermission(record)}>
+              设置权限
+            </Button>
             <Button type='text' onClick={() => handleDeleteRole(record)}>
               删除
             </Button>
@@ -98,6 +102,11 @@ const RoleList = () => {
     })
   }
 
+  // 设置权限
+  const handlePermission = (record: RoleItem) => {
+    permissionRef.current?.open('edit', record)
+  }
+
   return (
     <div>
       <Form className='searchForm' layout='inline' form={form}>
@@ -127,6 +136,7 @@ const RoleList = () => {
         <Table rowKey='_id' {...tableProps} bordered columns={columns} />
       </div>
       <CreateRoleModal roleRef={roleRef} update={search.reset} />
+      <SetPermission permissionRef={permissionRef} update={search.reset} />
     </div>
   )
 }

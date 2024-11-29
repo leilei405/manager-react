@@ -2,7 +2,7 @@ import { requestGet, requestPost } from '@/utils'
 import { CreateMenuParams, EditMenuParams, MenuItem, MenuParams } from '@/types'
 
 // 获取菜单列表
-export const getMenuList = (params: MenuParams) => {
+export const getMenuList = (params?: MenuParams) => {
   return requestGet<MenuItem[]>('/menu/list', params)
 }
 

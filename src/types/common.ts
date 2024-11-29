@@ -29,5 +29,6 @@ export interface IModalProp {
   deptRef?: MutableRefObject<{ open: (type: IAction, data?: EditParams) => void } | undefined> // 部门
   menuRef?: MutableRefObject<{ open: (type: IAction, data?: EditMenuParams) => void } | undefined> // 菜单
   roleRef?: MutableRefObject<{ open: (type: IAction, data?: RoleItem) => void } | undefined> // 角色
+  permissionRef?: MutableRefObject<{ open: (type: IAction, data?: RoleItem) => void } | undefined> // 权限
   update: () => void
 }

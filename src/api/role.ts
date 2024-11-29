@@ -16,3 +16,7 @@ export const updateRole = (params: EditRoleParams) => {
 export const deleteRole = (params: { _id: string }) => {
   return requestPost('/roles/delete', { _id: params._id })
 }
+
+export const getRoleList = () => {
+  return requestPost('/roles/allList')
+}
