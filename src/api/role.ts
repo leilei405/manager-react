@@ -1,5 +1,5 @@
 import { requestGet, requestPost } from '@/utils'
-import { CreateParams, IRoleListResult, RoleParams, EditRoleParams, DelRoleParams } from '@/types'
+import { CreateParams, IRoleListResult, RoleParams, EditRoleParams } from '@/types'
 
 export const getRoleListData = (params?: RoleParams) => {
   return requestGet<IRoleListResult>('/roles/list', params)
