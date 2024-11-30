@@ -4,6 +4,11 @@ export interface RoleParams extends PageParams {
   roleName?: string
 }
 
+export interface CreateParams {
+  roleName: string
+  remark?: string
+}
+
 export interface RoleItem {
   permissionList?: {
     checkedKeys?: string[]
@@ -17,9 +22,12 @@ export interface RoleItem {
   createTime?: string
 }
 
-export interface CreateParams {
-  roleName: string
-  remark?: string
+export interface CreatePermission {
+  _id: string
+  permissionList: {
+    checkedKeys: string[]
+    halfCheckedKeys: string[]
+  }
 }
 
 export interface EditRoleParams extends CreateParams {

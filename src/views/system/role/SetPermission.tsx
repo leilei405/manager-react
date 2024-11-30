@@ -1,7 +1,7 @@
 import { useEffect, useImperativeHandle, useState } from 'react'
-import { IAction, IModalProp, RoleItem } from '@/types'
-import { Form, Input, Tree, Modal } from 'antd'
-import { createRole, getMenuList, getRoleList, updateRole } from '@/api'
+import { IAction, IModalProp, MenuItem, RoleItem } from '@/types'
+import { Form, Input, Tree, Modal, message } from 'antd'
+import { getMenuList, setRolePermission } from '@/api'
 
 const formItemLayout = {
   labelCol: { span: 4 },
@@ -11,8 +11,10 @@ const formItemLayout = {
 const SetPermission = (props: IModalProp) => {
   const [form] = Form.useForm()
   const [visible, setVisible] = useState(false)
-  const [treeData, setTreeData] = useState([])
+  const [treeData, setTreeData] = useState<MenuItem[]>([])
   const [checkedKeys, setCheckedKeys] = useState<string[]>([])
+  const [roleInfo, setRoleInfo] = useState<RoleItem>()
+  const [permission, setPermission] = useState<RoleItem>()
 
   // 暴露给父组件的方法
   useImperativeHandle(props.permissionRef, () => {
@@ -24,21 +26,44 @@ const SetPermission = (props: IModalProp) => {
   // 打开模态框
   const open = (type: IAction, data?: RoleItem) => {
     setVisible(true)
-  }
-
-  // 提交表单
-  const handleSubmit = async () => {
-    const valid = await form.validateFields()
+    setRoleInfo(data)
   }
 
   // 取消重置操作
   const handleCancel = () => {
+    setPermission(undefined)
     setVisible(false)
     form.resetFields()
   }
 
-  const onCheck = () => {
-    //
+  const onCheck = (checkKeys: any, item: any) => {
+    setCheckedKeys(checkKeys)
+    const checkedKeys: string[] = []
+    const parentKeys: string[] = []
+    item.checkedNodes.map((node: MenuItem) => {
+      // 按钮类型
+      if (node.menuType === 2) {
+        checkedKeys.push(node._id)
+      } else {
+        parentKeys.push(node._id)
+      }
+    })
+    setPermission({
+      _id: roleInfo?._id || '',
+      permissionList: {
+        checkedKeys: checkKeys,
+        halfCheckedKeys: parentKeys.concat(item.halfCheckedKeys)
+      }
+    })
+  }
+
+  // 提交表单
+  const handleSubmit = async () => {
+    if (!permission) return
+    await setRolePermission(permission)
+    message.success('设置权限成功')
+    handleCancel()
+    props.update()
   }
 
   const getTreeData = async () => {
@@ -61,11 +86,18 @@ const SetPermission = (props: IModalProp) => {
       onCancel={handleCancel}
     >
       <Form form={form} colon={false} {...formItemLayout}>
-        <Form.Item label='角色名称' name='roleName'>
+        <Form.Item label='角色名称'>
           <Input placeholder='请输入角色名称' />
         </Form.Item>
-        <Form.Item label='备注' name='remark'>
-          <Tree checkable onCheck={onCheck} checkedKeys={checkedKeys} treeData={treeData} />
+        <Form.Item label='权限'>
+          <Tree
+            checkable
+            defaultExpandAll
+            fieldNames={{ title: 'menuName', key: '_id', children: 'children' }}
+            onCheck={onCheck}
+            checkedKeys={checkedKeys}
+            treeData={treeData}
+          />
         </Form.Item>
       </Form>
     </Modal>
