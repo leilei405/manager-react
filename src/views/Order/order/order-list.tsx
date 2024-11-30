@@ -6,10 +6,12 @@ import { getOrderList } from '@/api'
 import { orderStateOption } from '@/constant'
 import { formatDate, formatMoneyRegExp } from '@/utils'
 import CreateOrderModal from './components/CreateOrder'
+import OrderDetail from './components/OrderDetail'
 
 const OrderList = () => {
   const [form] = Form.useForm()
   const orderRef = useRef<{ open: (type: IAction, data?: OrderItem) => void }>()
+  const detailRef = useRef<{ open: (data?: OrderItem) => void }>()
 
   // 获取用户列表数据
   const getTableData = ({ current, pageSize }: { current: number; pageSize: number }, formData: OrderParams) => {
@@ -98,10 +100,10 @@ const OrderList = () => {
     {
       title: '操作',
       fixed: 'right',
-      render: _val => {
+      render: (_val, record) => {
         return (
           <Space>
-            <Button type='text' onClick={handleDetail}>
+            <Button type='text' onClick={() => handleDetail(record)}>
               详情
             </Button>
             <Button type='text' onClick={handleDot}>
@@ -120,8 +122,8 @@ const OrderList = () => {
   ]
 
   // 详情
-  const handleDetail = () => {
-    //
+  const handleDetail = (record: OrderItem) => {
+    detailRef.current?.open(record)
   }
 
   // 打点
@@ -185,6 +187,7 @@ const OrderList = () => {
       </div>
 
       <CreateOrderModal orderRef={orderRef} update={search.reset} />
+      <OrderDetail detailRef={detailRef} update={search.reset} />
     </div>
   )
 }

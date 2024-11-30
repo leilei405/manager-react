@@ -76,6 +76,15 @@ export const formatDate2 = (date?: Date, rule?: string) => {
   return fmt
 }
 
+// 手机号加密 188****888
+export const formatPhone = (phone?: number | string) => {
+  if (!phone) return '-'
+  let phoneStr = phone.toString()
+  if (phoneStr) {
+    return phoneStr.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2')
+  }
+}
+
 // 获取页面路径
 export const getPagePath = (list: MenuItem[]): string[] => {
   return list.reduce((result: string[], item: MenuItem) => {
