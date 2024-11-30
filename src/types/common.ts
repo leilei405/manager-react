@@ -3,6 +3,7 @@ import { UserInfo } from './user'
 import { EditParams } from './dept'
 import { EditMenuParams } from './menu'
 import { RoleItem } from './role'
+import { OrderItem } from './order-list'
 
 // 响应结构
 export interface IResult<T = any> {
@@ -30,5 +31,6 @@ export interface IModalProp {
   menuRef?: MutableRefObject<{ open: (type: IAction, data?: EditMenuParams) => void } | undefined> // 菜单
   roleRef?: MutableRefObject<{ open: (type: IAction, data?: RoleItem) => void } | undefined> // 角色
   permissionRef?: MutableRefObject<{ open: (type: IAction, data?: RoleItem) => void } | undefined> // 权限
+  orderRef?: MutableRefObject<{ open: (type: IAction, data?: OrderItem) => void } | undefined> // 订单
   update: () => void
 }

@@ -4,11 +4,12 @@ import { useAntdTable } from 'ahooks'
 import { OrderItem, IAction, OrderParams } from '@/types'
 import { getOrderList } from '@/api'
 import { orderStateOption } from '@/constant'
-import { formatDate } from '@/utils'
+import { formatDate, formatMoneyRegExp } from '@/utils'
+import CreateOrderModal from './components/CreateOrder'
 
 const OrderList = () => {
   const [form] = Form.useForm()
-  const modalRef = useRef<{ open: (type: IAction, data?: OrderItem) => void }>()
+  const orderRef = useRef<{ open: (type: IAction, data?: OrderItem) => void }>()
 
   // 获取用户列表数据
   const getTableData = ({ current, pageSize }: { current: number; pageSize: number }, formData: OrderParams) => {
@@ -32,22 +33,25 @@ const OrderList = () => {
       title: '订单编号',
       dataIndex: 'orderId',
       key: 'orderId',
+      width: 100,
       fixed: 'left'
     },
     {
       title: '城市',
       dataIndex: 'cityName',
-      key: 'cityName'
+      key: 'cityName',
+      width: 100
     },
     {
       title: '下单地址',
-      dataIndex: 'userEmail',
-      key: 'userEmail',
+      dataIndex: 'startAddress',
+      key: 'startAddress',
+      width: 280,
       render: (_value: string, record) => {
         return (
           <div>
-            <div>开始地址：{record.startAddress}</div>
-            <div>结束地址：{record.endAddress}</div>
+            <div>开始地址：{record.startAddress || '-'}</div>
+            <div>结束地址：{record.endAddress || '-'}</div>
           </div>
         )
       }
@@ -56,6 +60,7 @@ const OrderList = () => {
       title: '下单时间',
       dataIndex: 'createTime',
       key: 'createTime',
+      width: 240,
       render: (value: string) => {
         return formatDate(value)
       }
@@ -64,22 +69,31 @@ const OrderList = () => {
       title: '订单价格',
       dataIndex: 'orderAmount',
       key: 'orderAmount',
-      render: (value: string) => value || '-'
+      width: 100,
+      render: (value: string) => {
+        return formatMoneyRegExp(value)
+      }
     },
     {
       title: '订单状态',
       dataIndex: 'state',
-      key: 'state'
+      key: 'state',
+      width: 100,
+      render: (value: number) => {
+        return orderStateOption.find(item => item.value === value)?.label || '-'
+      }
     },
     {
       title: '用户名称',
       dataIndex: 'userName',
-      key: 'userName'
+      key: 'userName',
+      width: 120
     },
     {
       title: '司机名称',
       dataIndex: 'driverName',
-      key: 'driverName'
+      key: 'driverName',
+      width: 120
     },
     {
       title: '操作',
@@ -96,7 +110,7 @@ const OrderList = () => {
             <Button type='text' onClick={handleTrajectory}>
               轨迹
             </Button>
-            <Button type='text' onClick={handleDeleteOrder}>
+            <Button danger type='text' onClick={handleDeleteOrder}>
               删除
             </Button>
           </Space>
@@ -127,7 +141,7 @@ const OrderList = () => {
 
   // 新增
   const handleCreateOrder = () => {
-    modalRef.current?.open('create')
+    orderRef.current?.open('create')
   }
 
   // 导出
@@ -169,6 +183,8 @@ const OrderList = () => {
         </div>
         <Table rowKey='_id' {...tableProps} bordered columns={columns} />
       </div>
+
+      <CreateOrderModal orderRef={orderRef} update={search.reset} />
     </div>
   )
 }

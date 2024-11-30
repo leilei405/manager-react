@@ -50,3 +50,8 @@ export interface IOrderListResult {
     total: number
   }
 }
+
+export interface DictItem {
+  id: number
+  name: string
+}
