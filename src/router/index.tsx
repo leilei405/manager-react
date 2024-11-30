@@ -17,7 +17,7 @@ import MenuMangerList from '@/views/system/menu-manger'
 // 权限拦截
 import loadAuth from './authLoader'
 
-const routes = [
+export const routes = [
   {
     path: '/login',
     element: <Login />
@@ -49,7 +49,10 @@ const routes = [
       },
       {
         path: '/menuList',
-        element: <MenuMangerList />
+        element: <MenuMangerList />,
+        meta: {
+          auth: false
+        }
       },
       {
         path: '/roleList',

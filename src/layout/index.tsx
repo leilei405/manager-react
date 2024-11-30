@@ -1,8 +1,11 @@
 import React, { useEffect } from 'react'
-import { Outlet } from 'react-router-dom'
+import { Navigate, Outlet, useLocation, useRouteLoaderData } from 'react-router-dom'
 import { Layout, Watermark } from 'antd'
 import { getUserInfo } from '@/api'
 import { useStore } from '@/store'
+import { searchRoute } from '@/utils'
+import { IAuthLoader } from '@/router/authLoader'
+import { routes } from '@/router'
 
 // 布局组件 菜单 头部 底部 内容
 import SliderMenu from './SiderMenu'
@@ -14,6 +17,20 @@ const { Sider, Content } = Layout
 
 const LayoutPage: React.FC = () => {
   const { updateUserInfo, collapsed } = useStore()
+  const { pathname } = useLocation()
+
+  const dynamicRoute = searchRoute(pathname, routes)
+  console.log(dynamicRoute)
+
+  if (dynamicRoute && dynamicRoute.meta?.auth === false) {
+    // 不需要鉴权的路由 直接放行
+  } else {
+    const data = useRouteLoaderData('layout') as IAuthLoader
+    const staticPath = ['/welcome', '/403', '/404', '/500']
+    if (!data.menuPathList.includes(pathname) && !staticPath.includes(pathname)) {
+      return <Navigate to='/403' />
+    }
+  }
 
   // 获取用户信息
   const getUserInfoData = async () => {
