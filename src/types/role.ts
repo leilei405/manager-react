@@ -4,7 +4,7 @@ export interface RoleParams extends PageParams {
   roleName?: string
 }
 
-export interface CreateParams {
+export interface CreateRoleParams {
   roleName: string
   remark?: string
 }
@@ -30,7 +30,7 @@ export interface CreatePermission {
   }
 }
 
-export interface EditRoleParams extends CreateParams {
+export interface EditRoleParams extends CreateRoleParams {
   _id: string
 }
 

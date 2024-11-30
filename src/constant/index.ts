@@ -59,6 +59,26 @@ export const menuTypeOption: OptionType[] = [
   }
 ]
 
+// 订单状态
+export const orderStateOption: OptionType[] = [
+  {
+    value: 0,
+    label: '进行中'
+  },
+  {
+    value: 1,
+    label: '已完成'
+  },
+  {
+    value: 2,
+    label: '超时'
+  },
+  {
+    value: 3,
+    label: '取消'
+  }
+]
+
 // 菜单状态
 export const menuStateOption: OptionType[] = [
   {

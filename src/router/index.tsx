@@ -7,6 +7,7 @@ import DashBoardPage from '@/views/DashBoard'
 import UserList from '@/views/system/user'
 import DeptList from '@/views/system/dept'
 import RoleList from '@/views/system/role'
+import OrderList from '@/views/Order/order'
 
 // 403 404 500 页面
 import Page403 from '@/views/fallback/Page403'
@@ -57,6 +58,10 @@ export const routes = [
       {
         path: '/roleList',
         element: <RoleList />
+      },
+      {
+        path: '/orderList',
+        element: <OrderList />
       },
       {
         path: '*',
