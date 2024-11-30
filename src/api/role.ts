@@ -22,8 +22,8 @@ export const deleteRole = (params: { _id: string }) => {
 }
 
 // 获取所有角色
-export const getRoleList = () => {
-  return requestPost('/roles/allList')
+export const getRoleAllList = () => {
+  return requestGet<RoleItem[]>('/roles/allList')
 }
 
 // 设置角色权限

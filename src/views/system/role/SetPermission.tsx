@@ -1,6 +1,6 @@
 import { useEffect, useImperativeHandle, useState } from 'react'
 import { IAction, IModalProp, MenuItem, RoleItem } from '@/types'
-import { Form, Input, Tree, Modal, message } from 'antd'
+import { Form, Tree, Modal, message } from 'antd'
 import { getMenuList, setRolePermission } from '@/api'
 
 const formItemLayout = {
@@ -27,6 +27,8 @@ const SetPermission = (props: IModalProp) => {
   const open = (_type?: IAction, data?: RoleItem) => {
     setVisible(true)
     setRoleInfo(data)
+    // 回显数据
+    setCheckedKeys(data?.permissionList?.checkedKeys || [])
   }
 
   // 取消重置操作
@@ -85,10 +87,8 @@ const SetPermission = (props: IModalProp) => {
       onOk={handleSubmit}
       onCancel={handleCancel}
     >
-      <Form form={form} colon={false} {...formItemLayout}>
-        <Form.Item label='角色名称'>
-          <Input placeholder='请输入角色名称' />
-        </Form.Item>
+      <Form form={form} {...formItemLayout}>
+        <Form.Item label='角色名称'>{roleInfo?.roleName}</Form.Item>
         <Form.Item label='权限'>
           <Tree
             checkable
