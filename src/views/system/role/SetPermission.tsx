@@ -24,7 +24,7 @@ const SetPermission = (props: IModalProp) => {
   })
 
   // 打开模态框
-  const open = (type: IAction, data?: RoleItem) => {
+  const open = (_type?: IAction, data?: RoleItem) => {
     setVisible(true)
     setRoleInfo(data)
   }
