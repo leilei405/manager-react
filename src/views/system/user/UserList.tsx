@@ -6,6 +6,7 @@ import { deleteUser, getUserListData } from '@/api'
 import { roleOption } from '@/constant'
 import { roleFormat, statusFormat, formatDate } from '@/utils'
 import CreateUser from './CreateUser'
+import AuthButton from '@/views/AuthButton'
 import styles from './index.module.less'
 
 const UserList = () => {
@@ -178,9 +179,9 @@ const UserList = () => {
         <div className='headerWrapper'>
           <div className='title'>用户列表</div>
           <Space>
-            <Button type='primary' onClick={handleCreateUser}>
+            <AuthButton auth='user@create' type='primary' onClick={handleCreateUser}>
               新增
-            </Button>
+            </AuthButton>
             <Button type='primary' danger onClick={handleDeleteBatch}>
               批量删除
             </Button>
