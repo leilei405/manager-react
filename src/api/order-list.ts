@@ -1,5 +1,5 @@
 import { requestGet, requestPost } from '@/utils'
-import { CreateOrderParams, DictItem, IOrderListResult, OrderItem, OrderParams } from '@/types'
+import { CreateOrderParams, DictItem, IOrderListResult, OrderItem, OrderParams, OrderRoute } from '@/types'
 
 // 获取订单列表
 export const getOrderList = (params?: OrderParams) => {
@@ -24,4 +24,9 @@ export const createOrder = (params: CreateOrderParams) => {
 // 获取订单详情
 export const getOrderDetail = (orderId: string) => {
   return requestGet<OrderItem>(`/order/detail/${orderId}`)
+}
+
+// 更新订单
+export const updateOrder = (params: OrderRoute) => {
+  return requestPost(`/order/edit`, params)
 }
