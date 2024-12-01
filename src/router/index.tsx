@@ -8,6 +8,7 @@ import UserList from '@/views/system/user'
 import DeptList from '@/views/system/dept'
 import RoleList from '@/views/system/role'
 import OrderList from '@/views/Order/order'
+import OrderCluster from '@/views/Order/cluster'
 
 // 403 404 500 页面
 import Page403 from '@/views/fallback/Page403'
@@ -62,6 +63,10 @@ export const routes = [
       {
         path: '/orderList',
         element: <OrderList />
+      },
+      {
+        path: '/orderCluster',
+        element: <OrderCluster />
       },
       {
         path: '*',

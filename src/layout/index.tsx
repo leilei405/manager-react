@@ -25,7 +25,7 @@ const LayoutPage: React.FC = () => {
     // 不需要鉴权的路由 直接放行
   } else {
     const data = useRouteLoaderData('layout') as IAuthLoader
-    const staticPath = ['/welcome', '/403', '/404', '/500', '/orderList']
+    const staticPath = ['/welcome', '/403', '/404', '/500', '/orderList', '/orderCluster']
     if (!data.menuPathList.includes(pathname) && !staticPath.includes(pathname)) {
       return <Navigate to='/403' />
     }

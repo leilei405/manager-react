@@ -5,4 +5,5 @@ declare interface Window {
   BMapGLLib: {
     TrackAnimation: any
   }
+  BMapLib: any
 }

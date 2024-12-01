@@ -33,7 +33,7 @@ const MapTrajectory = (props: IModalProp) => {
     const polyline = new window.BMapGL.Polyline(point, {
       strokeColor: '#a170f2', // 线条颜色
       strokeWeight: 6, // 线条宽度
-      strokeOpacity: 0.5 // 线条透明度
+      strokeOpacity: 1 // 线条透明度
     })
 
     setTimeout(() => {
