@@ -138,9 +138,8 @@ const UserList = () => {
 
   // 表格rowSelection 配置
   const rowSelection: TableProps<UserInfo>['rowSelection'] = {
-    onChange: (selectedRowKeys: React.Key[], selectedRows: UserInfo[]) => {
+    onChange: (selectedRowKeys: React.Key[], _electedRows: UserInfo[]) => {
       setSelectRowKeys(selectedRowKeys)
-      console.log(selectedRows)
     },
     type: 'checkbox'
   }

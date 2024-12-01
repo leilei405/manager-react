@@ -6,7 +6,7 @@ interface Person {
 type K1 = keyof Person // 'name' | 'age' | 'location'
 const k: K1 = 'name'
 
-console.log(k)
+// console.log(k)
 
 const info = {
   name: '张三',

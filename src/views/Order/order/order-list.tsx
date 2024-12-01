@@ -8,13 +8,14 @@ import { formatDate, formatMoneyRegExp } from '@/utils'
 import CreateOrderModal from './components/CreateOrder'
 import OrderDetail from './components/OrderDetail'
 import OrderMarker from './components/OrderMarker'
+import MapTrajectory from './components/MapTrajectory'
 
 const OrderList = () => {
   const [form] = Form.useForm()
   const orderRef = useRef<{ open: (type: IAction, data?: OrderItem) => void }>()
   const detailRef = useRef<{ open: (data?: OrderItem) => void }>()
   const markerRef = useRef<{ open: (data?: OrderItem) => void }>()
-
+  const mapTrajectoryRef = useRef<{ open: (data?: OrderItem) => void }>()
   // 获取用户列表数据
   const getTableData = ({ current, pageSize }: { current: number; pageSize: number }, formData: OrderParams) => {
     return getOrderList({
@@ -135,7 +136,7 @@ const OrderList = () => {
 
   // 轨迹
   const handleTrajectory = (data: OrderItem) => {
-    markerRef.current?.open(data)
+    mapTrajectoryRef.current?.open(data)
   }
 
   // 删除
@@ -191,6 +192,7 @@ const OrderList = () => {
       <CreateOrderModal orderRef={orderRef} update={search.submit} />
       <OrderDetail detailRef={detailRef} update={search.submit} />
       <OrderMarker markerRef={markerRef} update={search.submit} />
+      <MapTrajectory mapTrajectoryRef={mapTrajectoryRef} update={search.submit} />
     </div>
   )
 }

@@ -40,8 +40,6 @@ const DeptList = () => {
     {
       title: '操作',
       render: (_, record) => {
-        console.log(record)
-
         return (
           <Space>
             <Button type='text' onClick={() => handleCreateDept(record._id)}>

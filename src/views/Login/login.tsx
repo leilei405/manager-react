@@ -29,21 +29,11 @@ const Login = () => {
     }
   }
 
-  const onFinishFailed = (errorInfo: any) => {
-    console.log('Failed:', errorInfo)
-  }
-
   return (
     <div className={styles.login}>
       <Card className={styles['login-wrapper']}>
         <Typography.Title className={styles.title}>系统登录</Typography.Title>
-        <Form
-          name='basic'
-          style={{ maxWidth: 600 }}
-          onFinish={onFinish}
-          onFinishFailed={onFinishFailed}
-          autoComplete='off'
-        >
+        <Form name='basic' style={{ maxWidth: 600 }} onFinish={onFinish} autoComplete='off'>
           <Form.Item name='userName' rules={[{ required: true, message: '请输入用户名!' }]}>
             <Input placeholder='请输入用户名' />
           </Form.Item>

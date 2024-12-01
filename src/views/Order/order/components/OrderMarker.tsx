@@ -18,9 +18,7 @@ const OrderMarker = (props: IModalProp) => {
   // 打开弹窗
   const open = async (data?: OrderItem) => {
     setVisible(true)
-    if (data) {
-      setMarkId(data.orderId)
-    }
+    setMarkId(data!.orderId)
     const markerData = await getOrderDetail(data!.orderId)
     renderMap(markerData)
   }
@@ -41,9 +39,10 @@ const OrderMarker = (props: IModalProp) => {
         map.removeOverlay(marker)
         const index = markerData.findIndex(item => item.id === marker.id)
         markerData.splice(index, 1)
-        setMarkerData([...markerData]) // 更新markerData
+        setMarkerData([...markerData]) // 存储markerData
       })
     )
+    setMarkerData([...markerData]) // 更新markerData
     marker.addContextMenu(markerMenu) //给标记添加右键菜单
     map.addOverlay(marker) // 添加marker到地图
   }

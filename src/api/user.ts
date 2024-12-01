@@ -33,7 +33,6 @@ export const editUser = (params: ICreateUserParams) => {
 
 // 删除用户 批量删除
 export const deleteUser = (params: { userIds: number[] }) => {
-  console.log('debugger', params)
   return requestPost('/users/delete', { userIds: params.userIds })
 }
 
