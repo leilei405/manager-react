@@ -7,11 +7,13 @@ import { orderStateOption } from '@/constant'
 import { formatDate, formatMoneyRegExp } from '@/utils'
 import CreateOrderModal from './components/CreateOrder'
 import OrderDetail from './components/OrderDetail'
+import OrderMarker from './components/OrderMarker'
 
 const OrderList = () => {
   const [form] = Form.useForm()
   const orderRef = useRef<{ open: (type: IAction, data?: OrderItem) => void }>()
   const detailRef = useRef<{ open: (data?: OrderItem) => void }>()
+  const markerRef = useRef<{ open: (data?: OrderItem) => void }>()
 
   // 获取用户列表数据
   const getTableData = ({ current, pageSize }: { current: number; pageSize: number }, formData: OrderParams) => {
@@ -106,10 +108,10 @@ const OrderList = () => {
             <Button type='text' onClick={() => handleDetail(record)}>
               详情
             </Button>
-            <Button type='text' onClick={handleDot}>
+            <Button type='text' onClick={() => handleDot(record)}>
               打点
             </Button>
-            <Button type='text' onClick={handleTrajectory}>
+            <Button type='text' onClick={() => handleTrajectory(record)}>
               轨迹
             </Button>
             <Button danger type='text' onClick={handleDeleteOrder}>
@@ -127,13 +129,13 @@ const OrderList = () => {
   }
 
   // 打点
-  const handleDot = () => {
-    //
+  const handleDot = (data: OrderItem) => {
+    markerRef.current?.open(data)
   }
 
   // 轨迹
-  const handleTrajectory = () => {
-    //
+  const handleTrajectory = (data: OrderItem) => {
+    markerRef.current?.open(data)
   }
 
   // 删除
@@ -186,8 +188,9 @@ const OrderList = () => {
         <Table rowKey='_id' {...tableProps} bordered columns={columns} />
       </div>
 
-      <CreateOrderModal orderRef={orderRef} update={search.reset} />
-      <OrderDetail detailRef={detailRef} update={search.reset} />
+      <CreateOrderModal orderRef={orderRef} update={search.submit} />
+      <OrderDetail detailRef={detailRef} update={search.submit} />
+      <OrderMarker markerRef={markerRef} update={search.submit} />
     </div>
   )
 }

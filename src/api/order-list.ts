@@ -22,6 +22,6 @@ export const createOrder = (params: CreateOrderParams) => {
 }
 
 // 获取订单详情
-export const getOrderDetail = (orderId: number) => {
+export const getOrderDetail = (orderId: string) => {
   return requestGet<OrderItem>(`/order/detail/${orderId}`)
 }

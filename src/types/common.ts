@@ -32,6 +32,7 @@ export interface IModalProp {
   roleRef?: MutableRefObject<{ open: (type: IAction, data?: RoleItem) => void } | undefined> // 角色
   permissionRef?: MutableRefObject<{ open: (type: IAction, data?: RoleItem) => void } | undefined> // 权限
   orderRef?: MutableRefObject<{ open: (type: IAction, data?: OrderItem) => void } | undefined> // 订单
-  detailRef?: MutableRefObject<{ open: (data?: OrderItem) => void } | undefined> // 订单
+  detailRef?: MutableRefObject<{ open: (data?: OrderItem) => void } | undefined> // 订单详情
+  markerRef?: MutableRefObject<{ open: (data?: OrderItem) => void } | undefined> // 订单轨迹地图
   update: () => void
 }
