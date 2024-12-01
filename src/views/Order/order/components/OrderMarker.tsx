@@ -87,6 +87,8 @@ const OrderMarker = (props: IModalProp) => {
   // 取消事件
   const handleCancel = () => {
     setVisible(false)
+    //  取消打点 清空markerData 防止下次打点时数据还在
+    setMarkerData([])
   }
 
   return (

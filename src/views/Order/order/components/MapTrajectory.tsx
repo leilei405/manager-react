@@ -5,6 +5,7 @@ import { getOrderDetail } from '@/api'
 
 const MapTrajectory = (props: IModalProp) => {
   const [visible, setVisible] = useState(false)
+  const [trackAni, setTrackAni] = useState<{ cancel?: () => void }>()
 
   const open = async (data?: OrderItem) => {
     const detail = await getOrderDetail(data!.orderId)
@@ -47,6 +48,7 @@ const MapTrajectory = (props: IModalProp) => {
         delay: 300
       })
       trackAni.start()
+      setTrackAni(trackAni)
     }
   }
 
@@ -55,10 +57,13 @@ const MapTrajectory = (props: IModalProp) => {
   }))
 
   const handleOk = () => {
+    trackAni?.cancel?.()
     setVisible(false)
   }
 
   const handleCancel = () => {
+    // 关闭的时候取消动画
+    trackAni?.cancel?.()
     setVisible(false)
   }
 
