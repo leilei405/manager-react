@@ -1,5 +1,14 @@
-import { requestGet, requestPost } from '@/utils'
-import { CreateOrderParams, DictItem, IOrderListResult, OrderItem, OrderParams, OrderRoute } from '@/types'
+import { downLoadFile, requestGet, requestPost } from '@/utils'
+import {
+  CreateOrderParams,
+  DelOrderParams,
+  DictItem,
+  IOrderListResult,
+  OrderItem,
+  OrderParams,
+  OrderRoute,
+  SearchOrderParams
+} from '@/types'
 
 // 获取订单列表
 export const getOrderList = (params?: OrderParams) => {
@@ -29,4 +38,14 @@ export const getOrderDetail = (orderId: string) => {
 // 更新订单
 export const updateOrder = (params: OrderRoute) => {
   return requestPost(`/order/edit`, params)
+}
+
+// 删除订单
+export const deleteOrder = (params: DelOrderParams) => {
+  return requestPost('/order/delete', { _id: params._id })
+}
+
+// 订单导出
+export const exportOrder = (params: SearchOrderParams) => {
+  return downLoadFile('/order/orderExport', params, '订单列表')
 }

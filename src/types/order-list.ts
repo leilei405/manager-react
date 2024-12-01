@@ -60,3 +60,13 @@ export interface OrderRoute {
   orderId: string //订单ID
   route: Array<{ lng: string; lat: string }>
 }
+
+export interface DelOrderParams {
+  _id: string
+}
+
+export interface SearchOrderParams {
+  orderId?: string
+  userName?: string
+  state?: number
+}

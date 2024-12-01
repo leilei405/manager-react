@@ -1,8 +1,8 @@
 import { useRef } from 'react'
-import { Button, Form, Input, Select, Space, Table, TableColumnsType } from 'antd'
+import { Button, Form, Input, message, Modal, Select, Space, Table, TableColumnsType } from 'antd'
 import { useAntdTable } from 'ahooks'
 import { OrderItem, IAction, OrderParams } from '@/types'
-import { getOrderList } from '@/api'
+import { deleteOrder, exportOrder, getOrderList } from '@/api'
 import { orderStateOption } from '@/constant'
 import { formatDate, formatMoneyRegExp } from '@/utils'
 import CreateOrderModal from './components/CreateOrder'
@@ -115,7 +115,7 @@ const OrderList = () => {
             <Button type='text' onClick={() => handleTrajectory(record)}>
               轨迹
             </Button>
-            <Button danger type='text' onClick={handleDeleteOrder}>
+            <Button danger type='text' onClick={() => handleDeleteOrder(record._id)}>
               删除
             </Button>
           </Space>
@@ -140,8 +140,18 @@ const OrderList = () => {
   }
 
   // 删除
-  const handleDeleteOrder = async () => {
-    //
+  const handleDeleteOrder = async (_id: string) => {
+    Modal.confirm({
+      title: '确认删除',
+      content: '确认删除该订单吗？',
+      okText: '确认',
+      cancelText: '取消',
+      onOk: async () => {
+        await deleteOrder({ _id })
+        message.success('删除成功')
+        search.submit()
+      }
+    })
   }
 
   // 新增
@@ -150,7 +160,10 @@ const OrderList = () => {
   }
 
   // 导出
-  const handleExportFile = () => {}
+  const handleExportFile = async () => {
+    await exportOrder(form.getFieldsValue())
+    message.success('导出成功')
+  }
 
   return (
     <div>
@@ -161,7 +174,7 @@ const OrderList = () => {
         <Form.Item label='用户名称' name='userName'>
           <Input placeholder='请输入用户名称' />
         </Form.Item>
-        <Form.Item label='订单状态' name='state'>
+        <Form.Item label='订单状态' name='state' initialValue={1}>
           <Select options={orderStateOption} style={{ width: '100%' }} placeholder='请选择用户状态'></Select>
         </Form.Item>
         <Form.Item>

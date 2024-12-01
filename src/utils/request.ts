@@ -44,6 +44,7 @@ instance.interceptors.response.use(
   response => {
     const data: IResult = response.data
     hideLoading()
+    if (response.config.responseType === 'blob') return response
     if (data.code === 500001) {
       message.error(data.msg)
       removeStorage('token')
@@ -86,4 +87,21 @@ export const requestPost = <T>(
   options: IConfig = { showLoading: true, showError: true }
 ): Promise<T> => {
   return instance.post(url, data, options)
+}
+
+//  下载文件
+export const downLoadFile = (url: string, data?: any, fileName = 'fileName.xlsx') => {
+  return instance({ url, data, method: 'post', responseType: 'blob' }).then(res => {
+    const blob = new Blob([res.data], {
+      type: res.data.type
+    })
+    const name = (res.headers['file-name'] as string) || fileName
+    const link = document.createElement('a') // 创建a标签
+    const objectUrl = URL.createObjectURL(blob) // 创建下载链接
+    link.href = objectUrl // href指向下载链接
+    link.download = decodeURIComponent(name) // 下载后文件名
+    link.click() // 点击下载
+    document.body.removeChild(link) // 下载完成移除元素
+    URL.revokeObjectURL(objectUrl) // 释放掉blob对象
+  })
 }
