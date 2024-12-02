@@ -9,6 +9,7 @@ import DeptList from '@/views/system/dept'
 import RoleList from '@/views/system/role'
 import OrderList from '@/views/Order/order'
 import OrderCluster from '@/views/Order/cluster'
+import DriverList from '@/views/Order/driverList'
 
 // 403 404 500 页面
 import Page403 from '@/views/fallback/Page403'
@@ -67,6 +68,10 @@ export const routes = [
       {
         path: '/orderCluster',
         element: <OrderCluster />
+      },
+      {
+        path: '/driverList',
+        element: <DriverList />
       },
       {
         path: '*',

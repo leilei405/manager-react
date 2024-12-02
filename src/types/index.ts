@@ -6,4 +6,4 @@ export * from './dept' // 部门类型
 export * from './menu' // 菜单类型
 export * from './role' // 角色类型
 export * from './order-list' // 订单类型
-export * from './index.d.ts'
+export * from './driver'
